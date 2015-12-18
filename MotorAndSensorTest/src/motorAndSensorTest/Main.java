@@ -8,11 +8,14 @@ import lejos.nxt.*;
 public class Main {
 	
 	private static Cruiser cruiser = new Cruiser();
+	private static TouchSensor touch = new TouchSensor(SensorPort.S1);
 
 	public static void main(String[] args) {
 		System.out.println("Hello World");
-		Button.waitForPress();
-		
+		while (!touch.isPressed()) {
+			// just wait
+		}
+		/*
 		// Motors more in detail in Cruiser.java
 		cruiser.moveForward(5);
 		cruiser.rotateLeft(90);
@@ -20,5 +23,6 @@ public class Main {
 		cruiser.moveBackward(5);
 		cruiser.rotateLeft(90);
 		cruiser.moveBackward(5);
+		*/
 	}
 }
