@@ -3,3 +3,5 @@ MotorAndSensorTest/build/
 MotorAndSensorTest/doc/
 MotorAndSensorTest/nbproject/
 *~
+*.classpath
+*.project
