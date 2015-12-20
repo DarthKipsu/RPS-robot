@@ -2,6 +2,10 @@ MotorAndSensorTest/bin/
 MotorAndSensorTest/build/
 MotorAndSensorTest/doc/
 MotorAndSensorTest/nbproject/
+RPC/bin/
+RPC/build/
+RPC/doc/
+RPC/nbproject/
 *~
 *.classpath
 *.project
