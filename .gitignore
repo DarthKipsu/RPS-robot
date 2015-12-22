@@ -17,3 +17,5 @@ classes/
 /RPCRunner/bin/
 /RPCRunner/nbproject/
 /RPCRunner/doc/
+/RPCRunner/build.xml
+/RPCRunner/manifest.mf
