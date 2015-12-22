@@ -1,7 +1,9 @@
 
 package rpcrunner;
 
-import imageReader.Reader;
+import image.WebcamReader;
+import java.io.File;
+import javax.imageio.ImageIO;
 
 /**
  * Basically oversees running the game.
@@ -14,10 +16,11 @@ import imageReader.Reader;
 public class RPCRunner {
 
     public static void main(String[] args) {
+        WebcamReader reader = new WebcamReader();
+        reader.takeImage();
         try {
-            new Reader().readImage();
+            ImageIO.write(reader.getImage(), "PNG", new File("test.png"));
         } catch (Exception ex) {
         }
     }
-    
 }
