@@ -6,6 +6,14 @@ RPC/bin/
 RPC/build/
 RPC/doc/
 RPC/nbproject/
+classes/
 *~
 *.classpath
 *.project
+/RPCRunner/nbproject/private/
+/RPCReaderT/nbproject/private/
+/RPCRunner/dist/
+/RPCRunner/build/
+/RPCRunner/bin/
+/RPCRunner/nbproject/
+/RPCRunner/doc/
