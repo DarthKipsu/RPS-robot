@@ -16,10 +16,8 @@ import javax.imageio.ImageIO;
 public class RPCRunner {
 
     public static void main(String[] args) {
-        WebcamReader reader = new WebcamReader();
-        reader.takeImage();
         try {
-            ImageIO.write(reader.getImage(), "PNG", new File("test.png"));
+            ImageIO.write(WebcamReader.takeImage(), "PNG", new File("test.png"));
         } catch (Exception ex) {
         }
     }

@@ -3,33 +3,39 @@ package image;
 
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.log.WebcamLogConfigurator;
+
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 /**
- * Read and save an image from computer webcam to be used later.
+ * Read images from computer webcam.
  */
 public class WebcamReader {
 
-    BufferedImage image;
-
     /**
      * Take an image with the computer primary webcam.
+     * @return image taken
      */
-	public void takeImage() {
+	public static BufferedImage takeImage() {
         WebcamLogConfigurator.configure("logback.xml");
 		Webcam webcam = Webcam.getDefault();
         webcam.open();
-        image = webcam.getImage();
+        BufferedImage image = webcam.getImage();
+        webcam.close();
+        return image;
 	}
 
-    public BufferedImage getImage() {
-        return image;
-    }
-    
-    public BufferedImage getBinaryImage() {
+    /**
+     * Take an image with the computer primary webcam and return a small black
+     * and white version of it. The resulting image is 80 x 65 pixels in size.
+     * @return binary version of image taken
+     */
+    public static BufferedImage takeBinaryImage() {
         int scaledWidth = 80;
         int scaledHeight = 65;
+        
+        BufferedImage image = takeImage();
+        
         BufferedImage binary = new BufferedImage(scaledWidth, scaledHeight,
                 BufferedImage.TYPE_BYTE_BINARY);
 

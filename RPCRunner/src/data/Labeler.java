@@ -1,10 +1,10 @@
 
 package data;
 
+import image.ImageWriter;
 import image.WebcamReader;
+
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -13,39 +13,44 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Scanner;
-import javax.imageio.ImageIO;
+
 
 /**
  * Takes and image, asks for a label and saves it in the database.
+ * This class is used to build data for machine learning purposes.
  */
 public class Labeler {
-    private static WebcamReader reader;
+    public static final String IMAGE_DIRECTORY = "data/images/";
+    public static final Path DATA = Paths.get("data/data");
+    public static final Path LABELS = Paths.get("data/labels");
 
     public static void main(String[] args) throws IOException {
-        Path data = Paths.get("data/data");
-        Path labels = Paths.get("data/labels");
-        
-        reader = new WebcamReader();
-        reader.takeImage();
-        BufferedImage image = reader.getBinaryImage();
-        
-        ImageIO.write(image, "PNG", new File("data/images/" + Files.readAllLines(labels).size() + ".png"));
-        byte[] imgarray = ((DataBufferByte)image.getRaster().getDataBuffer()).getData();
-        System.out.println(Arrays.toString(imgarray));
-        
+        takeNewDatasetImage();
+        labelDatasetImage();
+
+        System.out.println(Arrays.toString(Files.readAllBytes(DATA)));
+        System.out.println(Files.readAllLines(LABELS, Charset.forName("UTF-8")));
+        System.out.println(Files.readAllBytes(DATA).length);
+    }
+
+    private static void takeNewDatasetImage() throws IOException {
+        BufferedImage image = WebcamReader.takeBinaryImage();
+        ImageWriter.saveImageToFile(image);
+        ImageWriter.saveBytesToFile(image);
+    }
+
+    private static void labelDatasetImage() throws IOException {
+        String label = readLabelFromUser();
+        Files.write(LABELS, Arrays.asList(label), Charset.forName("UTF-8"),
+                StandardOpenOption.APPEND);
+    }
+
+    private static String readLabelFromUser() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Choose image label:");
         System.out.println("0 = Rock");
         System.out.println("1 = Paper");
         System.out.println("2 = Scissors");
-        String label = scanner.next();
-        
-        Files.write(data, imgarray, StandardOpenOption.APPEND);
-        Files.write(labels, Arrays.asList(label), Charset.forName("UTF-8"), StandardOpenOption.APPEND);
-        
-        System.out.println(Arrays.toString(Files.readAllBytes(data)));
-        System.out.println(Files.readAllLines(labels, Charset.forName("UTF-8")));
-        
-        System.out.println(Files.readAllBytes(data).length);
-}
+        return scanner.next();
+    }
 }
