@@ -30,6 +30,6 @@ def perceptron(data, label):
         if converged:
             return w
     if pocket_count == 0:
-        print 'Something not right: 0 pockets'
+        print('Something not right: 0 pockets')
         return w
     return pocket
