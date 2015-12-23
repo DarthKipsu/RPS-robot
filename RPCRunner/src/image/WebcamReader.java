@@ -27,14 +27,14 @@ public class WebcamReader {
         return image;
     }
     
-    public BufferedImage getGreyImage() {
-        BufferedImage gray = new BufferedImage(
-                image.getWidth(),
-                image.getHeight(),
-                BufferedImage.TYPE_BYTE_GRAY);
+    public BufferedImage getBinaryImage() {
+        int scaledWidth = 80;
+        int scaledHeight = 65;
+        BufferedImage binary = new BufferedImage(scaledWidth, scaledHeight,
+                BufferedImage.TYPE_BYTE_BINARY);
 
-        Graphics2D g = gray.createGraphics();
-        g.drawImage(image, 0, 0, null);
-        return gray;
+        Graphics2D g = binary.createGraphics();
+        g.drawImage(image, 0, 0, scaledWidth, scaledHeight, null);
+        return binary;
     }
 }

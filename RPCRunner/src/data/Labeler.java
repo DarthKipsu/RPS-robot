@@ -10,6 +10,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Scanner;
 import javax.imageio.ImageIO;
@@ -21,26 +22,30 @@ public class Labeler {
     private static WebcamReader reader;
 
     public static void main(String[] args) throws IOException {
-        reader = new WebcamReader();
-        System.out.println("Hello world");
-        reader.takeImage();
-        BufferedImage grey = reader.getGreyImage();
-        
-        ImageIO.write(grey, "PNG", new File("test.png"));
-        byte[] imgarray = ((DataBufferByte)grey.getRaster().getDataBuffer()).getData();
-        System.out.println(Arrays.toString(imgarray));
-        
-        Scanner reader = new Scanner(System.in);
-        System.out.println("Write image label:");
-        String label = reader.next();
-        
         Path data = Paths.get("data/data");
         Path labels = Paths.get("data/labels");
         
-        Files.write(data, imgarray);
-        Files.write(labels, Arrays.asList(label), Charset.forName("UTF-8"));
+        reader = new WebcamReader();
+        reader.takeImage();
+        BufferedImage image = reader.getBinaryImage();
+        
+        ImageIO.write(image, "PNG", new File("data/images/" + Files.readAllLines(labels).size() + ".png"));
+        byte[] imgarray = ((DataBufferByte)image.getRaster().getDataBuffer()).getData();
+        System.out.println(Arrays.toString(imgarray));
+        
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Choose image label:");
+        System.out.println("0 = Rock");
+        System.out.println("1 = Paper");
+        System.out.println("2 = Scissors");
+        String label = scanner.next();
+        
+        Files.write(data, imgarray, StandardOpenOption.APPEND);
+        Files.write(labels, Arrays.asList(label), Charset.forName("UTF-8"), StandardOpenOption.APPEND);
         
         System.out.println(Arrays.toString(Files.readAllBytes(data)));
         System.out.println(Files.readAllLines(labels, Charset.forName("UTF-8")));
+        
+        System.out.println(Files.readAllBytes(data).length);
 }
 }
