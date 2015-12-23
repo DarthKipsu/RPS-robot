@@ -20,3 +20,4 @@ classes/
 /RPCRunner/build.xml
 /RPCRunner/manifest.mf
 /RPCRunner/data/
+*.swp
