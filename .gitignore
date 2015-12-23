@@ -21,3 +21,5 @@ classes/
 /RPCRunner/manifest.mf
 /RPCRunner/data/
 *.swp
+*.pyc
+*/__pycache__/
