@@ -2,6 +2,7 @@
 package rpcrunner;
 
 import data.Labeler;
+import java.io.IOException;
 
 /**
  * Basically oversees running the game.
@@ -16,7 +17,7 @@ public class RPCRunner {
     private static MachineVisionDisplay vision = new MachineVisionDisplay(
             new Labeler());
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, InterruptedException {
         vision.handleImageInput();
     }
 }

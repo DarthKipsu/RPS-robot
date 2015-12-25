@@ -1,6 +1,8 @@
+#!/usr/bin/env python
 import load_data as reader
 import numpy as np
 import perceptron as ml
+import sys
 
 from sklearn.metrics import confusion_matrix
 
@@ -35,17 +37,21 @@ def all_vs_all(training_data, training_labels, test_data):
 
     return np.argmax(votes, axis=0)
 
-X, y = reader.read_training_data()
+def main():
+    X, y = reader.read_training_data()
 
-n = int(2 * len(X) / 3)
-training_data = X[0:n]
-training_labels = y[0:n]
+    n = int(2 * len(X) / 3)
+    training_data = X[0:n]
+    training_labels = y[0:n]
+    
+    test_data = X[n:]
+    test_labels = y[n:]
+    
+    result = confusion_matrix(test_labels, all_vs_all(training_data, training_labels, test_data))
 
-test_data = X[n:]
-test_labels = y[n:]
+    print(result)
+    print("Error rate", (1 - np.sum(np.diagonal(result)) / float(len(test_data))))
+    sys.exit(1)
 
-result = confusion_matrix(test_labels, all_vs_all(training_data, training_labels, test_data))
-
-print("Confusion matrix with trainin data size", n, "photos")
-print(result)
-print("Error rate", (1 - np.sum(np.diagonal(result)) / float(len(test_data))))
+if __name__ == "__main__":
+    main()
