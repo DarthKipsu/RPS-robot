@@ -37,7 +37,7 @@ def all_vs_all(training_data, training_labels, test_data):
 
     return np.argmax(votes, axis=0)
 
-def main():
+def test():
     X, y = reader.read_training_data()
 
     n = int(2 * len(X) / 3)
@@ -51,7 +51,12 @@ def main():
 
     print(result)
     print("Error rate", (1 - np.sum(np.diagonal(result)) / float(len(test_data))))
-    sys.exit(1)
+
+def main():
+    X, y = reader.read_training_data()
+    test_data = reader.read_input_data()
+    result = all_vs_all(X, y, test_data)
+    print(result[0])
 
 if __name__ == "__main__":
     main()

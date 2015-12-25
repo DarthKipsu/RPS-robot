@@ -3,6 +3,7 @@ package rpcrunner;
 
 import data.Labeler;
 import data.ProgramExecuter;
+import image.ImageWriter;
 import image.WebcamReader;
 import java.awt.BorderLayout;
 
@@ -28,8 +29,9 @@ public class MachineVisionDisplay {
 
     public void handleImageInput() throws IOException, InterruptedException {
         ProgramExecuter exe = new ProgramExecuter();
-        exe.execute("/home/kipsu/Coding/lego/MachineLearning/prophet.py");
         BufferedImage image = WebcamReader.takeBinaryImage();
+        ImageWriter.saveTempToFile(image);
+        exe.execute("../MachineLearning/prophet.py");
         buildImageFrame(image);
     }
 

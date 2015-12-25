@@ -10,6 +10,8 @@ import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 import javax.imageio.ImageIO;
@@ -18,6 +20,7 @@ import javax.imageio.ImageIO;
  * Writes images used as data to the disc.
  */
 public class ImageWriter {
+    public static final Path TEMPDATA = Paths.get("data/temp");
 
     /**
      * Save an image file to the disc as a byte array. The array is 650 bytes
@@ -43,5 +46,13 @@ public class ImageWriter {
     public static void saveImageToFile(BufferedImage image) throws IOException {
         ImageIO.write(image, "PNG", new File(IMAGE_DIRECTORY +
                 Files.readAllLines(LABELS).size() + ".png"));
+    }
+    
+    public static void saveTempToFile(BufferedImage image) throws IOException {
+        byte[] imgarray = ((DataBufferByte)image.getRaster()
+                .getDataBuffer())
+                .getData();
+
+        Files.write(TEMPDATA, imgarray);
     }
 }

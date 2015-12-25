@@ -12,3 +12,12 @@ def read_training_data():
     data = np.fromstring(np.array([data_file.read(650) for i in labels]),
             dtype=np.uint8)
     return np.reshape(data, (-1, 650)), labels
+
+def read_input_data():
+    """
+    Reads temporary saved input data created by RPCRunner.
+    :return: data as a list of 650 bits
+    """
+    temp_file = open('../RPCRunner/data/temp', 'rb')
+    data = np.fromstring(temp_file.read(650), dtype=np.uint8)
+    return np.reshape(data, (-1, 650))
