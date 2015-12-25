@@ -25,12 +25,13 @@ public class MachineVisionDisplay {
         BufferedImage image = WebcamReader.takeBinaryImage();
         ImageWriter.saveTempToFile(image);
         int prediction = exe.execute("../MachineLearning/prophet.py");
-        buildImageFrame(image);
+        buildImageFrame(image, prediction);
     }
 
-    private void buildImageFrame(BufferedImage image) {
+    private void buildImageFrame(BufferedImage image, int prediction) {
         JFrame frame = buildDefaultFrame();
         addImageTo(frame, image);
+        addPredictionTo(frame, prediction);
         frame.setVisible(true);
     }
 
@@ -44,5 +45,11 @@ public class MachineVisionDisplay {
     private void addImageTo(JFrame frame, BufferedImage image) {
         JLabel imageIcon = new JLabel(new ImageIcon(image));
         frame.getContentPane().add(imageIcon, BorderLayout.CENTER);
+    }
+    
+    private void addPredictionTo(JFrame frame, int prediction) {
+        String[] signs = new String[]{"rock", "paper", "scissors"};
+        JLabel text = new JLabel("Predicted " + signs[prediction]);
+        frame.getContentPane().add(text, BorderLayout.EAST);
     }
 }
