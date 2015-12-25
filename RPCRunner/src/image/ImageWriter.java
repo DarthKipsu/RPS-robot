@@ -47,7 +47,14 @@ public class ImageWriter {
         ImageIO.write(image, "PNG", new File(IMAGE_DIRECTORY +
                 Files.readAllLines(LABELS).size() + ".png"));
     }
-    
+
+    /**
+     * Saves an image temporarily to disc as a byte array. The array is 650
+     * byptes long and can be appended to the end of data byte list later when
+     * an image label is figured out.
+     * @param image to be written
+     * @throws IOException 
+     */
     public static void saveTempToFile(BufferedImage image) throws IOException {
         byte[] imgarray = ((DataBufferByte)image.getRaster()
                 .getDataBuffer())

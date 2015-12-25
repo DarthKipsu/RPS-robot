@@ -1,7 +1,6 @@
 
 package rpcrunner;
 
-import data.Labeler;
 import data.ProgramExecuter;
 import image.ImageWriter;
 import image.WebcamReader;
@@ -21,17 +20,11 @@ import javax.swing.WindowConstants;
  */
 public class MachineVisionDisplay {
 
-    private Labeler labeler;
-
-    public MachineVisionDisplay(Labeler labeler) {
-        this.labeler = labeler;
-    }
-
     public void handleImageInput() throws IOException, InterruptedException {
         ProgramExecuter exe = new ProgramExecuter();
         BufferedImage image = WebcamReader.takeBinaryImage();
         ImageWriter.saveTempToFile(image);
-        exe.execute("../MachineLearning/prophet.py");
+        int prediction = exe.execute("../MachineLearning/prophet.py");
         buildImageFrame(image);
     }
 

@@ -14,8 +14,7 @@ import java.io.IOException;
  */
 public class RPCRunner {
 
-    private static MachineVisionDisplay vision = new MachineVisionDisplay(
-            new Labeler());
+    private static MachineVisionDisplay vision = new MachineVisionDisplay();
 
     public static void main(String[] args) throws IOException, InterruptedException {
         vision.handleImageInput();
