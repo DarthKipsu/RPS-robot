@@ -9,9 +9,11 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 /**
@@ -20,7 +22,7 @@ import javafx.scene.text.Text;
  * as labeling and saving process for adding the data to the database.
  */
 public class MachineVisionDisplay {
-    private final String[] SIGNS = new String[]{"rock", "paper", "scissors"};
+    private final String[] SIGNS = new String[]{"Rock", "Paper", "Scissors"};
 
     public GridPane handleImageInput() throws IOException, InterruptedException {
         ProgramExecuter exe = new ProgramExecuter();
@@ -34,6 +36,7 @@ public class MachineVisionDisplay {
         GridPane grid = RPCGrid();
         grid.add(viewFrom(image), 0, 0);
         grid.add(predictionText(prediction), 1, 0);
+        grid.add(buttons(prediction), 0, 1, 2, 1);
         return grid;
     }
 
@@ -51,6 +54,21 @@ public class MachineVisionDisplay {
     }
 
     private Text predictionText(int prediction) {
-        return new Text("Predicted " + SIGNS[prediction]);
+        return new Text("Predicted \"" + SIGNS[prediction] + "\"");
+    }
+
+    private HBox buttons(int prediction) {
+        HBox hbox = new HBox();
+        hbox.setSpacing(10);
+        Button acceptButton = new Button("ACCEPT");
+        Button undoButton = new Button("Cancel");
+        Text text = new Text("It really was:");
+        hbox.getChildren().addAll(acceptButton, undoButton, text);
+        for (int i = 0; i < SIGNS.length; i++) {
+            if (i == prediction) continue;
+            Button signButton = new Button(SIGNS[i]);
+            hbox.getChildren().add(signButton);
+        }
+        return hbox;
     }
 }
