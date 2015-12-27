@@ -31,14 +31,26 @@ public class MachineVisionDisplay {
     }
 
     private GridPane buildImageFrame(BufferedImage image, int prediction) {
+        GridPane grid = RPCGrid();
+        grid.add(viewFrom(image), 0, 0);
+        grid.add(predictionText(prediction), 1, 0);
+        return grid;
+    }
+
+    private GridPane RPCGrid() {
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
-        grid.setPadding(new Insets(0, 10, 0, 10));
-        ImageView imageView = new ImageView(SwingFXUtils.toFXImage(image, new WritableImage(image.getWidth(), image.getHeight())));
-        Text predictionText = new Text("Predicted" + SIGNS[prediction]);
-        grid.add(imageView, 0, 0);
-        grid.add(predictionText, 1, 0);
+        grid.setPadding(new Insets(20, 10, 20, 10));
         return grid;
+    }
+
+    private ImageView viewFrom(BufferedImage image) {
+        return new ImageView(SwingFXUtils.toFXImage(image,
+                new WritableImage(image.getWidth(), image.getHeight())));
+    }
+
+    private Text predictionText(int prediction) {
+        return new Text("Predicted " + SIGNS[prediction]);
     }
 }
