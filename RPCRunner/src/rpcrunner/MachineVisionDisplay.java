@@ -4,14 +4,15 @@ package rpcrunner;
 import data.ProgramExecuter;
 import image.ImageWriter;
 import image.WebcamReader;
-import java.awt.BorderLayout;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.WindowConstants;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Insets;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 
 /**
  * Displays user input as JFrame.
@@ -19,37 +20,25 @@ import javax.swing.WindowConstants;
  * as labeling and saving process for adding the data to the database.
  */
 public class MachineVisionDisplay {
+    private final String[] SIGNS = new String[]{"rock", "paper", "scissors"};
 
-    public void handleImageInput() throws IOException, InterruptedException {
+    public GridPane handleImageInput() throws IOException, InterruptedException {
         ProgramExecuter exe = new ProgramExecuter();
         BufferedImage image = WebcamReader.takeBinaryImage();
         ImageWriter.saveTempToFile(image);
         int prediction = exe.execute("../MachineLearning/prophet.py");
-        buildImageFrame(image, prediction);
+        return buildImageFrame(image, prediction);
     }
 
-    private void buildImageFrame(BufferedImage image, int prediction) {
-        JFrame frame = buildDefaultFrame();
-        addImageTo(frame, image);
-        addPredictionTo(frame, prediction);
-        frame.setVisible(true);
-    }
-
-    private JFrame buildDefaultFrame() {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setSize(500, 200);
-        return frame;
-    }
-
-    private void addImageTo(JFrame frame, BufferedImage image) {
-        JLabel imageIcon = new JLabel(new ImageIcon(image));
-        frame.getContentPane().add(imageIcon, BorderLayout.CENTER);
-    }
-    
-    private void addPredictionTo(JFrame frame, int prediction) {
-        String[] signs = new String[]{"rock", "paper", "scissors"};
-        JLabel text = new JLabel("Predicted " + signs[prediction]);
-        frame.getContentPane().add(text, BorderLayout.EAST);
+    private GridPane buildImageFrame(BufferedImage image, int prediction) {
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(0, 10, 0, 10));
+        ImageView imageView = new ImageView(SwingFXUtils.toFXImage(image, new WritableImage(image.getWidth(), image.getHeight())));
+        Text predictionText = new Text("Predicted" + SIGNS[prediction]);
+        grid.add(imageView, 0, 0);
+        grid.add(predictionText, 1, 0);
+        return grid;
     }
 }
