@@ -7,7 +7,11 @@ import image.WebcamReader;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
@@ -23,9 +27,11 @@ import javafx.scene.text.Text;
  */
 public class MachineVisionDisplay {
     private final String[] SIGNS = new String[]{"Rock", "Paper", "Scissors"};
+    private final ProgramExecuter exe = new ProgramExecuter();
+    
+    private Text predictionText = new Text();
 
     public GridPane handleImageInput() throws IOException, InterruptedException {
-        ProgramExecuter exe = new ProgramExecuter();
         BufferedImage image = WebcamReader.takeBinaryImage();
         ImageWriter.saveTempToFile(image);
         int prediction = exe.execute("../MachineLearning/prophet.py");
@@ -34,9 +40,10 @@ public class MachineVisionDisplay {
 
     private GridPane buildImageFrame(BufferedImage image, int prediction) {
         GridPane grid = RPCGrid();
+        updatePredictionText(prediction);
         grid.add(viewFrom(image), 0, 0);
-        grid.add(predictionText(prediction), 1, 0);
-        grid.add(buttons(prediction), 0, 1, 2, 1);
+        grid.add(predictionText, 1, 0);
+        grid.add(buttons(prediction, grid), 0, 1, 2, 1);
         return grid;
     }
 
@@ -53,15 +60,26 @@ public class MachineVisionDisplay {
                 new WritableImage(image.getWidth(), image.getHeight())));
     }
 
-    private Text predictionText(int prediction) {
-        return new Text("Predicted \"" + SIGNS[prediction] + "\"");
+    private void updatePredictionText(int prediction) {
+        predictionText.setText("Predicted \"" + SIGNS[prediction] + "\"");
     }
 
-    private HBox buttons(int prediction) {
+    private HBox buttons(int prediction, GridPane grid) {
         HBox hbox = new HBox();
         hbox.setSpacing(10);
         Button acceptButton = new Button("ACCEPT");
-        Button undoButton = new Button("Cancel");
+        Button undoButton = new Button("Retake photo");
+        undoButton.setOnAction(new EventHandler<ActionEvent>(){
+            @Override public void handle(ActionEvent e) {
+                try {
+                    BufferedImage image = WebcamReader.takeBinaryImage();
+                    ImageWriter.saveTempToFile(image);
+                    grid.add(viewFrom(image), 0, 0);
+                    updatePredictionText(exe.execute("../MachineLearning/prophet.py"));
+                } catch (Exception ex) {
+                }
+            }
+        });
         Text text = new Text("It really was:");
         hbox.getChildren().addAll(acceptButton, undoButton, text);
         for (int i = 0; i < SIGNS.length; i++) {
