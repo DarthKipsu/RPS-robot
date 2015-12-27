@@ -35,24 +35,31 @@ public class MachineVisionDisplay {
     
     private Text predictionText = new Text();
     private int prediction;
+    private BufferedImage image;
 
-    public GridPane handleImageInput() throws IOException, InterruptedException {
-        BufferedImage image = WebcamReader.takeBinaryImage();
-        ImageWriter.saveTempToFile(image);
-        prediction = exe.execute("../MachineLearning/prophet.py");
-        return buildImageFrame(image);
+    public GridPane handleImageInput()
+            throws IOException, InterruptedException {
+        takeNewImage();
+        return buildImageFrame();
     }
 
-    private GridPane buildImageFrame(BufferedImage image) {
-        GridPane grid = RPCGrid();
+    private BufferedImage takeNewImage()
+            throws IOException, InterruptedException {
+        image = WebcamReader.takeBinaryImage();
+        prediction = exe.predictImageSign();
         updatePredictionText();
-        grid.add(viewFrom(image), 0, 0);
+        return image;
+    }
+
+    private GridPane buildImageFrame() {
+        GridPane grid = rpcGrid();
+        grid.add(imageInFxFormat(), 0, 0);
         grid.add(predictionText, 1, 0);
-        grid.add(buttons(grid, image), 0, 1, 2, 1);
+        grid.add(buttons(grid), 0, 1, 2, 1);
         return grid;
     }
 
-    private GridPane RPCGrid() {
+    private GridPane rpcGrid() {
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
@@ -60,7 +67,7 @@ public class MachineVisionDisplay {
         return grid;
     }
 
-    private ImageView viewFrom(BufferedImage image) {
+    private ImageView imageInFxFormat() {
         return new ImageView(SwingFXUtils.toFXImage(image,
                 new WritableImage(image.getWidth(), image.getHeight())));
     }
@@ -69,37 +76,13 @@ public class MachineVisionDisplay {
         predictionText.setText("Predicted \"" + SIGNS[prediction] + "\"");
     }
 
-    private HBox buttons(GridPane grid, BufferedImage image) {
+    private HBox buttons(GridPane grid) {
         HBox hbox = new HBox();
         hbox.setSpacing(10);
         Button acceptButton = new Button("ACCEPT");
-        acceptButton.setOnAction(new EventHandler<ActionEvent>(){
-            @Override public void handle(ActionEvent e) {
-                try {
-                    ImageWriter.saveBytesToFile(image);
-                    ImageWriter.saveImageToFile(image);
-                    Files.write(LABELS, Arrays.asList("" + prediction), Charset.forName("UTF-8"),
-                        StandardOpenOption.APPEND);
-                    Stage stage = (Stage) acceptButton.getScene().getWindow();
-                    stage.close();
-                } catch (Exception ex) {
-                }
-            }
-        });
+        acceptButton.setOnAction(imageSaveEvent(""+prediction, acceptButton));
         Button undoButton = new Button("Retake photo");
-        undoButton.setOnAction(new EventHandler<ActionEvent>(){
-            @Override public void handle(ActionEvent e) {
-                try {
-                    BufferedImage image = WebcamReader.takeBinaryImage();
-                    ImageWriter.saveTempToFile(image);
-                    prediction = exe.execute("../MachineLearning/prophet.py");
-                    System.out.println(prediction);
-                    updatePredictionText();
-                    grid.add(viewFrom(image), 0, 0);
-                } catch (Exception ex) {
-                }
-            }
-        });
+        undoButton.setOnAction(newImageEvent(grid));
         Text text = new Text("It really was:");
         hbox.getChildren().addAll(acceptButton, undoButton, text);
         for (int i = 0; i < SIGNS.length; i++) {
@@ -107,20 +90,32 @@ public class MachineVisionDisplay {
             Button signButton = new Button(SIGNS[i]);
             hbox.getChildren().add(signButton);
             String sign = "" + i;
-            signButton.setOnAction(new EventHandler<ActionEvent>(){
-                @Override public void handle(ActionEvent e) {
-                    try {
-                        ImageWriter.saveBytesToFile(image);
-                        ImageWriter.saveImageToFile(image);
-                        Files.write(LABELS, Arrays.asList(sign), Charset.forName("UTF-8"),
-                            StandardOpenOption.APPEND);
-                        Stage stage = (Stage) signButton.getScene().getWindow();
-                        stage.close();
-                    } catch (Exception ex) {
-                    }
-                }
-            });
+            signButton.setOnAction(imageSaveEvent(sign, signButton));
         }
         return hbox;
+    }
+
+    private EventHandler imageSaveEvent(String sign, Button button) {
+        return (EventHandler<ActionEvent>) (ActionEvent t) -> {
+            try {
+                ImageWriter.saveBytesToFile(image);
+                ImageWriter.saveImageToFile(image);
+                Files.write(LABELS,
+                        Arrays.asList(sign),
+                        Charset.forName("UTF-8"),
+                        StandardOpenOption.APPEND);
+                Stage stage = (Stage) button.getScene().getWindow();
+                stage.close();
+            } catch (IOException ex) {}
+        };
+    }
+
+    private EventHandler newImageEvent(GridPane grid) {
+        return (EventHandler<ActionEvent>) (ActionEvent e) -> {
+            try {
+                image = takeNewImage();
+                grid.add(imageInFxFormat(), 0, 0);
+            } catch (IOException | InterruptedException ex) {}
+        };
     }
 }
