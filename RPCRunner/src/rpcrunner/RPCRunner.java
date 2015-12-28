@@ -22,6 +22,9 @@ public class RPCRunner extends Application {
             new MachineVisionDisplay();
     private static final PlayerSelectorDisplay playerSelector =
             new PlayerSelectorDisplay();
+    private static final GameDisplay game = new GameDisplay();
+    
+    private static File opponentFile;
 
     public static void main(String[] args)
             throws IOException, InterruptedException {
@@ -38,9 +41,16 @@ public class RPCRunner extends Application {
 
     public static void continueFromPlayerSelection(Stage stage,
             String opponent,
-            File opponentFile) throws IOException, InterruptedException {
+            File file) throws IOException, InterruptedException {
+        opponentFile = file;
         stage.setScene(new Scene(
-                vision.userInputGridPane(stage, opponent, opponentFile)));
+                game.gameGridPane(stage, opponent)));
+        stage.show();
+    }
+    
+    public static void displayResults(Stage stage)
+            throws IOException, InterruptedException {
+        stage.setScene(new Scene(vision.resultGridPane(stage, opponentFile)));
         stage.show();
     }
 }
