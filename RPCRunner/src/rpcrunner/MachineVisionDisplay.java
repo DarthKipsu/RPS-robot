@@ -32,13 +32,15 @@ import javafx.stage.Stage;
 public class MachineVisionDisplay {
     private final String[] SIGNS = new String[]{"Rock", "Paper", "Scissors"};
     private final ProgramExecuter exe = new ProgramExecuter();
+    private Stage stage;
     
     private Text predictionText = new Text();
     private int prediction;
     private BufferedImage image;
 
-    public GridPane handleImageInput()
+    public GridPane handleImageInput(Stage stage)
             throws IOException, InterruptedException {
+        this.stage = stage;
         takeNewImage();
         return buildImageFrame();
     }
@@ -79,32 +81,24 @@ public class MachineVisionDisplay {
     private HBox buttons(GridPane grid) {
         HBox hbox = new HBox();
         hbox.setSpacing(10);
-        Button acceptButton = new Button("ACCEPT");
-        acceptButton.setOnAction(imageSaveEvent(""+prediction, acceptButton));
-        Button undoButton = new Button("Retake photo");
-        undoButton.setOnAction(newImageEvent(grid));
-        Text text = new Text("It really was:");
-        hbox.getChildren().addAll(acceptButton, undoButton, text);
-        for (int i = 0; i < SIGNS.length; i++) {
-            if (i == prediction) continue;
-            Button signButton = new Button(SIGNS[i]);
-            hbox.getChildren().add(signButton);
-            String sign = "" + i;
-            signButton.setOnAction(imageSaveEvent(sign, signButton));
-        }
+        hbox.getChildren().addAll(
+                newButton("ACCEPT", imageSaveEvent()),
+                newButton("Retake photo", newImageEvent(grid)),
+                new Text("It really was:"));
+        addSignCorrectionButtons(hbox, prediction);
         return hbox;
     }
 
-    private EventHandler imageSaveEvent(String sign, Button button) {
+    private EventHandler imageSaveEvent(int... label) {
         return (EventHandler<ActionEvent>) (ActionEvent t) -> {
+            if (label.length > 0) prediction = label[0];
             try {
                 ImageWriter.saveBytesToFile(image);
                 ImageWriter.saveImageToFile(image);
                 Files.write(LABELS,
-                        Arrays.asList(sign),
+                        Arrays.asList(""+prediction),
                         Charset.forName("UTF-8"),
                         StandardOpenOption.APPEND);
-                Stage stage = (Stage) button.getScene().getWindow();
                 stage.close();
             } catch (IOException ex) {}
         };
@@ -117,5 +111,18 @@ public class MachineVisionDisplay {
                 grid.add(imageInFxFormat(), 0, 0);
             } catch (IOException | InterruptedException ex) {}
         };
+    }
+
+    private Button newButton(String buttonText, EventHandler eventHandler) {
+        Button button = new Button(buttonText);
+        button.setOnAction(eventHandler);
+        return button;
+    }
+
+    private void addSignCorrectionButtons(HBox hbox, int prediction) {
+        for (int i = 0; i < SIGNS.length; i++) {
+            if (i == prediction) continue;
+            hbox.getChildren().add(newButton(SIGNS[i], imageSaveEvent(i)));
+        }
     }
 }
