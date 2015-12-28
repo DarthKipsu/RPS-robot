@@ -2,6 +2,7 @@
 package rpcrunner;
 
 import com.github.sarxos.webcam.log.WebcamLogConfigurator;
+import data.OpponentDB;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -17,7 +18,9 @@ import javafx.stage.Stage;
  */
 public class RPCRunner extends Application {
 
-    private static MachineVisionDisplay vision = new MachineVisionDisplay();
+    private static final MachineVisionDisplay vision =
+            new MachineVisionDisplay();
+    private static final OpponentDB opponent = new OpponentDB();
 
     public static void main(String[] args)
             throws IOException, InterruptedException {
@@ -28,7 +31,9 @@ public class RPCRunner extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         stage.setTitle("RPC runner");
-        stage.setScene(new Scene(vision.userInputGridPane(stage)));
+        stage.setScene(new Scene(opponent.opponentNameGridPane(stage)));
         stage.show();
+//        stage.setScene(new Scene(vision.userInputGridPane(stage)));
+//        stage.show();
     }
 }
