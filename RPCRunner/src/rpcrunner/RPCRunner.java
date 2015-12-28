@@ -1,6 +1,7 @@
 
 package rpcrunner;
 
+import com.github.sarxos.webcam.log.WebcamLogConfigurator;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -18,7 +19,9 @@ public class RPCRunner extends Application {
 
     private static MachineVisionDisplay vision = new MachineVisionDisplay();
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args)
+            throws IOException, InterruptedException {
+        WebcamLogConfigurator.configure("logback.xml");
         launch(args);
     }
 

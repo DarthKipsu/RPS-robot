@@ -12,6 +12,7 @@ import java.io.IOException;
  * Read images from computer webcam.
  */
 public class WebcamReader {
+    private static Webcam webcam = Webcam.getDefault();
 
     /**
      * Take an image with the computer primary webcam and return a small black
@@ -24,19 +25,17 @@ public class WebcamReader {
         int scaledHeight = 65;
         
         BufferedImage image = takeImage();
-        
         BufferedImage binary = new BufferedImage(scaledWidth, scaledHeight,
                 BufferedImage.TYPE_BYTE_BINARY);
 
         Graphics2D g = binary.createGraphics();
         g.drawImage(image, 0, 0, scaledWidth, scaledHeight, null);
+        
         ImageWriter.saveTempToFile(binary);
         return binary;
     }
 
 	private static BufferedImage takeImage() {
-        WebcamLogConfigurator.configure("logback.xml");
-		Webcam webcam = Webcam.getDefault();
         webcam.open();
         BufferedImage image = webcam.getImage();
         webcam.close();
