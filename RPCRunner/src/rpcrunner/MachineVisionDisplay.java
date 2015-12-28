@@ -1,17 +1,12 @@
 
 package rpcrunner;
 
-import static data.Labeler.LABELS;
 import data.ProgramExecuter;
 import image.ImageWriter;
 import image.WebcamReader;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -95,10 +90,7 @@ public class MachineVisionDisplay {
             try {
                 ImageWriter.saveBytesToFile(image);
                 ImageWriter.saveImageToFile(image);
-                Files.write(LABELS,
-                        Arrays.asList(""+prediction),
-                        Charset.forName("UTF-8"),
-                        StandardOpenOption.APPEND);
+                ImageWriter.saveLabelToFile(prediction);
                 stage.close();
             } catch (IOException ex) {}
         };

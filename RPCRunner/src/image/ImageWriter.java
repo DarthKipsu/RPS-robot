@@ -9,10 +9,12 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
@@ -61,5 +63,17 @@ public class ImageWriter {
                 .getData();
 
         Files.write(TEMPDATA, imgarray);
+    }
+
+    /**
+     * Saves a label to file. Labels are saved as strings, each label on their
+     * corresponding line, matching the same image index (in byte array format).
+     * @param label 
+     */
+    public static void saveLabelToFile(int label) throws IOException {
+        Files.write(LABELS,
+                Arrays.asList(""+label),
+                Charset.forName("UTF-8"),
+                StandardOpenOption.APPEND);
     }
 }
