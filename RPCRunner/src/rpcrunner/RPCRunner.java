@@ -28,7 +28,7 @@ public class RPCRunner extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         stage.setTitle("RPC runner");
-        stage.setScene(new Scene(vision.handleImageInput(stage)));
+        stage.setScene(new Scene(vision.userInputGridPane(stage)));
         stage.show();
     }
 }

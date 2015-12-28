@@ -33,7 +33,7 @@ public class MachineVisionDisplay {
     private int prediction;
     private BufferedImage image;
 
-    public GridPane handleImageInput(Stage stage)
+    public GridPane userInputGridPane(Stage stage)
             throws IOException, InterruptedException {
         this.stage = stage;
         takeNewImage();
@@ -80,7 +80,7 @@ public class MachineVisionDisplay {
                 newButton("ACCEPT", imageSaveEvent()),
                 newButton("Retake photo", newImageEvent(grid)),
                 new Text("It really was:"));
-        addSignCorrectionButtons(hbox, prediction);
+        addSignCorrectionButtonsFor(hbox);
         return hbox;
     }
 
@@ -111,7 +111,7 @@ public class MachineVisionDisplay {
         return button;
     }
 
-    private void addSignCorrectionButtons(HBox hbox, int prediction) {
+    private void addSignCorrectionButtonsFor(HBox hbox) {
         for (int i = 0; i < SIGNS.length; i++) {
             if (i == prediction) continue;
             hbox.getChildren().add(newButton(SIGNS[i], imageSaveEvent(i)));
