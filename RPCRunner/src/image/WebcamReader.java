@@ -2,7 +2,6 @@
 package image;
 
 import com.github.sarxos.webcam.Webcam;
-import com.github.sarxos.webcam.log.WebcamLogConfigurator;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
