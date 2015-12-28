@@ -39,7 +39,8 @@ public class RPCRunner extends Application {
     public static void continueFromPlayerSelection(Stage stage,
             String opponent,
             File opponentFile) throws IOException, InterruptedException {
-        stage.setScene(new Scene(vision.userInputGridPane(stage)));
+        stage.setScene(new Scene(
+                vision.userInputGridPane(stage, opponent, opponentFile)));
         stage.show();
     }
 }

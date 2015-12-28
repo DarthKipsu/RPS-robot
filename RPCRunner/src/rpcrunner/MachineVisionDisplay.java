@@ -6,6 +6,7 @@ import image.ImageWriter;
 import image.WebcamReader;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -28,14 +29,19 @@ public class MachineVisionDisplay {
     private final String[] SIGNS = new String[]{"Rock", "Paper", "Scissors"};
     private final ProgramExecuter exe = new ProgramExecuter();
     private Stage stage;
+    private String opponent;
+    private File opponentFile;
     
     private Text predictionText = new Text();
     private int prediction;
     private BufferedImage image;
 
-    public GridPane userInputGridPane(Stage stage)
-            throws IOException, InterruptedException {
+    public GridPane userInputGridPane(Stage stage,
+            String opponent,
+            File opponentFile) throws IOException, InterruptedException {
         this.stage = stage;
+        this.opponent = opponent;
+        this.opponentFile = opponentFile;
         takeNewImage();
         return buildImageFrame();
     }
@@ -50,9 +56,10 @@ public class MachineVisionDisplay {
 
     private GridPane buildImageFrame() {
         GridPane grid = rpcGrid();
-        grid.add(imageInFxFormat(), 0, 0);
-        grid.add(predictionText, 1, 0);
-        grid.add(buttons(grid), 0, 1, 2, 1);
+        grid.add(new Text("Welcome, " + opponent), 0, 0, 2, 1);
+        grid.add(imageInFxFormat(), 0, 1);
+        grid.add(predictionText, 1, 1);
+        grid.add(buttons(grid), 0, 2, 2, 1);
         return grid;
     }
 
@@ -70,7 +77,7 @@ public class MachineVisionDisplay {
     }
 
     private void updatePredictionText() {
-        predictionText.setText("Predicted \"" + SIGNS[prediction] + "\"");
+        predictionText.setText("AI saw \"" + SIGNS[prediction] + "\"");
     }
 
     private HBox buttons(GridPane grid) {
