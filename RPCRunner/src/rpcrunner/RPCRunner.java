@@ -61,7 +61,7 @@ public class RPCRunner extends Application {
     private static EventHandler startGameEarly() {
         return (EventHandler<KeyEvent>) (KeyEvent t) -> {
             if (t.getCode().equals(KeyCode.ENTER)) {
-                game.addTimelineEffects(0);
+                game.addTimelineEffects(1);
             }
         };
     }
