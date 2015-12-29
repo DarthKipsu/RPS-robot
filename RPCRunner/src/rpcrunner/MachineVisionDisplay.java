@@ -1,6 +1,7 @@
 
 package rpcrunner;
 
+import data.OpponentDB;
 import data.ProgramExecuter;
 import image.ImageWriter;
 import image.WebcamReader;
@@ -29,6 +30,7 @@ public class MachineVisionDisplay {
     private final String[] SIGNS = new String[]{"Rock", "Paper", "Scissors"};
     private final ProgramExecuter exe = new ProgramExecuter();
     private Stage stage;
+    private OpponentDB db;
 
     private Text predictionText = new Text();
     private int prediction;
@@ -36,8 +38,10 @@ public class MachineVisionDisplay {
     private BufferedImage image;
 
     public GridPane resultGridPane(Stage stage,
-            File opponentFile) throws IOException, InterruptedException {
+            File opponentFile,
+            OpponentDB db) throws IOException, InterruptedException {
         this.stage = stage;
+        this.db = db;
         ai_played = new AIPlayer(opponentFile).play();
         takeNewImage();
         return buildImageFrame();
@@ -114,6 +118,7 @@ public class MachineVisionDisplay {
                 ImageWriter.saveBytesToFile(image);
                 ImageWriter.saveImageToFile(image);
                 ImageWriter.saveLabelToFile(prediction);
+                db.saveMatchOutcome(prediction, ai_played);
                 stage.close();
             } catch (IOException ex) {}
         };

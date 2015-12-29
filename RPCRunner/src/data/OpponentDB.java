@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 
 /**
@@ -32,11 +33,21 @@ public class OpponentDB {
         return currentOpponent;
     }
 
-    public File selectOpponent(String name) throws IOException {
+    public File setOpponent(String name) throws IOException {
         currentOpponent = name;
         writeCurrentOpponentToFile();
         findOpponentFile();
         return opponentFile;
+    }
+
+    public void saveMatchOutcome(int opponent, int ai) {
+        try {
+            Files.write(Paths.get(OPPONENT_DIR + currentOpponent),
+                    Arrays.asList(opponent + " " + ai),
+                    Charset.forName("UTF-8"),
+                    StandardOpenOption.APPEND);
+        } catch (IOException ex) {
+        }
     }
 
     public boolean nameIsValid(String name) {

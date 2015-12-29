@@ -22,10 +22,11 @@ import javafx.stage.Stage;
  */
 public class PlayerSelectorDisplay {
 
-    private final OpponentDB db = new OpponentDB();
+    private OpponentDB db;
     private Stage stage;
 
-    public GridPane opponentNameGridPane(Stage stage) {
+    public GridPane opponentNameGridPane(Stage stage, OpponentDB db) {
+        this.db = db;
         this.stage = stage;
         GridPane grid = rpcGrid();
         TextField nameField = nameField();
@@ -71,7 +72,7 @@ public class PlayerSelectorDisplay {
 
     private void selectPalyerAndContinue(TextField name) {
         try {
-            File playList = db.selectOpponent(name.getText());
+            File playList = db.setOpponent(name.getText());
             stage.close();
             RPCRunner.continueFromPlayerSelection(stage,
                     db.getOpponent(),
