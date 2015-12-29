@@ -116,7 +116,6 @@ public class MachineVisionDisplay {
 
     private void addSignCorrectionButtonsFor(HBox hbox) {
         for (int i = 0; i < SIGNS.length; i++) {
-            if (i == prediction) continue;
             hbox.getChildren().add(newButton(SIGNS[i], imageSaveEvent(i)));
         }
     }
