@@ -2,10 +2,10 @@
 package rpcrunner;
 
 import java.io.IOException;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -24,6 +24,12 @@ public class GameDisplay {
     private Stage stage;
     private Text countDown;
 
+    /**
+     * Display the initial game stage, where game introduction and instructions
+     * are shown. Te game will automatically start after 10 seconds. This method
+     * is also used to initialize the class (when opponent is known).
+     * @param opponent the username for the player
+     */
     public GridPane gameGridPane(Stage stage, String opponent) {
         this.stage = stage;
         String welcome = "Welcome " + opponent + ". I want to play a game.";
@@ -32,10 +38,16 @@ public class GameDisplay {
         grid.add(new Text(COUNT_TEXT), 0, 1);
         countDown = new Text("");
         grid.add(countDown, 0, 2);
-        addTimelineEffects(8);
+        addTimelineEffects(10);
         return grid;
     }
 
+    /**
+     * Display a window allowing player to play another game or quit. Uses the
+     * same username as with previous games.
+     * 
+     * TODO: Change username
+     */
     public GridPane playAgainGridPane() {
         String again = "Play again? [enter]";
         String quit = "Quit? [esc]";
@@ -47,14 +59,14 @@ public class GameDisplay {
         return grid;
     }
 
-    private GridPane rpcGrid() {
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 10, 20, 10));
-        return grid;
-    }
-
+    /**
+     * Creates a new countdown for Text field identified earlier as countdown
+     * field. The countdown will start after a given wait time and count down
+     * from 3 with each following frame (each frames duration is 1 second).
+     * After the count reaches 0, it will close the current scene and display
+     * game results.
+     * @param waitTime seconds to wait before starting the countdown
+     */
     public void addTimelineEffects(int waitTime) {
         timeline.getKeyFrames().clear();
         timeline.getKeyFrames().add(countFor(waitTime + 0, "3", countDown));
@@ -65,27 +77,27 @@ public class GameDisplay {
         timeline.play();
     }
 
+    private GridPane rpcGrid() {
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 10, 20, 10));
+        return grid;
+    }
+
     private KeyFrame countFor(int duration, String count, Text countDown) {
-        return new KeyFrame(Duration.seconds(duration),
-            new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    countDown.setText(count);
-                }
-            });
+        return new KeyFrame(Duration.seconds(duration), (ActionEvent event) -> {
+            countDown.setText(count);
+        });
     }
 
     private KeyFrame closeAfter(int duration) {
-        return new KeyFrame(Duration.seconds(duration),
-            new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    try {
-                        stage.close();
-                        RPCRunner.displayResults(stage);
-                    } catch (IOException | InterruptedException ex) {
-                    }
-                }
-            });
+        return new KeyFrame(Duration.seconds(duration), (ActionEvent event) -> {
+            try {
+                stage.close();
+                RPCRunner.displayResults(stage);
+            } catch (IOException | InterruptedException ex) {
+            }
+        });
     }
 }

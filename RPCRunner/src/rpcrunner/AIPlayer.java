@@ -1,17 +1,18 @@
 
 package rpcrunner;
 
-import java.io.File;
+import data.OpponentDB;
+
 import java.util.Random;
 
 /**
  * This class is used for deciding in which way the computer AI will play.
  */
 public class AIPlayer {
-    private final File opponentFile;
+    private OpponentDB db;
 
-    public AIPlayer(File opponentFile) {
-        this.opponentFile = opponentFile;
+    public AIPlayer(OpponentDB db) {
+        this.db = db;
     }
 
     public int play() {

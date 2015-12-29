@@ -3,12 +3,13 @@ package rpcrunner;
 
 import data.OpponentDB;
 import data.ProgramExecuter;
+
 import image.ImageWriter;
 import image.WebcamReader;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -25,6 +26,8 @@ import javafx.stage.Stage;
  * Displays user input as JFrame.
  * Works as the eyes of the RPC runner and handles seeing user hand sign as well
  * as labeling and saving process for adding the data to the database.
+ * 
+ * TODO: Split this class, it's doing way more than it should. :)
  */
 public class MachineVisionDisplay {
     private final String[] SIGNS = new String[]{"Rock", "Paper", "Scissors"};
@@ -38,11 +41,10 @@ public class MachineVisionDisplay {
     private BufferedImage image;
 
     public GridPane resultGridPane(Stage stage,
-            File opponentFile,
             OpponentDB db) throws IOException, InterruptedException {
         this.stage = stage;
         this.db = db;
-        ai_played = new AIPlayer(opponentFile).play();
+        ai_played = new AIPlayer(db).play();
         takeNewImage();
         return buildImageFrame();
     }

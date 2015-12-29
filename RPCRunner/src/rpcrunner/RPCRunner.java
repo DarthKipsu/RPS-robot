@@ -1,10 +1,12 @@
 
 package rpcrunner;
 
-import com.github.sarxos.webcam.log.WebcamLogConfigurator;
 import data.OpponentDB;
-import java.io.File;
+
+import com.github.sarxos.webcam.log.WebcamLogConfigurator;
+
 import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -13,12 +15,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 /**
- * Basically oversees running the game.
- * 
- * TODO: get player info
- * TODO: initiate a rock paper and scissors game
- * TODO: send played item to robot
- * TODO: read user input (sign) and record game outcome
+ * Initiates different stages displayed for player as the game runs.
  */
 public class RPCRunner extends Application {
 
@@ -29,14 +26,18 @@ public class RPCRunner extends Application {
     private static final GameDisplay game = new GameDisplay();
     private static final OpponentDB db = new OpponentDB();
 
-    private static File opponentFile;
-
+    /**
+     * Configures webcam and launches the application.
+     */
     public static void main(String[] args)
             throws IOException, InterruptedException {
         WebcamLogConfigurator.configure("logback.xml");
         launch(args);
     }
 
+    /**
+     * Starts the game by calling a display to ask players username.
+     */
     @Override
     public void start(Stage stage) throws IOException {
         stage.setTitle("RPC runner");
@@ -44,22 +45,31 @@ public class RPCRunner extends Application {
         stage.show();
     }
 
+    /**
+     * Calls a display to start the actual game after getting players username.
+     * @param opponent the username of the player
+     */
     public static void continueFromPlayerSelection(Stage stage,
-            String opponent,
-            File file) throws IOException, InterruptedException {
-        opponentFile = file;
+            String opponent) throws IOException, InterruptedException {
         Scene scene = new Scene(game.gameGridPane(stage, opponent));
         scene.addEventHandler(KeyEvent.KEY_PRESSED, startGameEarly());
         stage.setScene(scene);
         stage.show();
     }
 
+    /**
+     * Calls a display to show the outcome of the game just played.
+     */
     public static void displayResults(Stage stage)
             throws IOException, InterruptedException {
-        stage.setScene(new Scene(vision.resultGridPane(stage, opponentFile, db)));
+        stage.setScene(new Scene(vision.resultGridPane(stage, db)));
         stage.show();
     }
 
+    /**
+     * Calls a display to ask whether or not the player wants to play again or
+     * quit. If a rematch is selected the stage will also handle that.
+     */
     public static void playAgain(Stage stage) {
         Scene scene = new Scene(game.playAgainGridPane());
         scene.addEventHandler(KeyEvent.KEY_PRESSED, startGameEarly());

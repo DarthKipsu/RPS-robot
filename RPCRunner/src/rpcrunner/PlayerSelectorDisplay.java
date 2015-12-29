@@ -3,7 +3,6 @@ package rpcrunner;
 
 import data.OpponentDB;
 
-import java.io.File;
 import java.io.IOException;
 
 import javafx.event.Event;
@@ -72,11 +71,10 @@ public class PlayerSelectorDisplay {
 
     private void selectPalyerAndContinue(TextField name) {
         try {
-            File playList = db.setOpponent(name.getText());
+            db.setOpponent(name.getText());
             stage.close();
             RPCRunner.continueFromPlayerSelection(stage,
-                    db.getOpponent(),
-                    playList);
+                    db.getOpponent());
         } catch (IOException | InterruptedException ex) {
         }
     }
