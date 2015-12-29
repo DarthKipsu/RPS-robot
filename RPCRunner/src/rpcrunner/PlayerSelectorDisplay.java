@@ -6,11 +6,13 @@ import data.OpponentDB;
 import java.io.File;
 import java.io.IOException;
 
-import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -20,7 +22,7 @@ import javafx.stage.Stage;
  */
 public class PlayerSelectorDisplay {
 
-    private OpponentDB db = new OpponentDB();
+    private final OpponentDB db = new OpponentDB();
     private Stage stage;
 
     public GridPane opponentNameGridPane(Stage stage) {
@@ -43,27 +45,28 @@ public class PlayerSelectorDisplay {
 
     private TextField nameField() {
         TextField name = new TextField(db.getOpponent());
-        name.setPromptText("Player name");
+        name.addEventHandler(KeyEvent.KEY_PRESSED, (KeyEvent t) -> {
+            if (t.getCode().equals(KeyCode.ENTER)) {
+                handlePlayerSelectionEvent(name);
+            }
+        });
         return name;
     }
 
     private Button submitButton(TextField name) {
         Button submit = new Button("Submit");
-        submit.setOnAction(changePlayerName(name));
+        submit.setOnAction((EventHandler) (Event t) -> {
+            handlePlayerSelectionEvent(name);
+        });
         return submit;
     }
 
-    private EventHandler changePlayerName(TextField name) {
-        return new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent t) {
-                if (db.nameIsValid(name.getText())) {
-                    selectPalyerAndContinue(name);
-                } else {
-                    name.setText("Choose name first!");
-                }
-            }
-        };
+    private void handlePlayerSelectionEvent(TextField name) {
+        if (db.nameIsValid(name.getText())) {
+            selectPalyerAndContinue(name);
+        } else {
+            name.setText("Choose name first!");
+        }
     }
 
     private void selectPalyerAndContinue(TextField name) {
