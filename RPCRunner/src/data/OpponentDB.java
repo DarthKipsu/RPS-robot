@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 /**
  * Opponent database will handle writing and reading of opponent data from file.
@@ -16,6 +17,7 @@ public class OpponentDB {
     private final String OPPONENT_DIR = "data/players/";
     
     private String currentOpponent;
+    private File opponentFile;
 
     public OpponentDB() {
         try {
@@ -32,16 +34,27 @@ public class OpponentDB {
 
     public File selectOpponent(String name) throws IOException {
         currentOpponent = name;
-        File playList = new File(OPPONENT_DIR, currentOpponent);
-        if (!playList.exists()) {
-            playList.createNewFile();
-        }
-        return playList;
+        writeCurrentOpponentToFile();
+        findOpponentFile();
+        return opponentFile;
     }
 
     public boolean nameIsValid(String name) {
         return name != null
                 && !name.isEmpty()
                 && !name.equals("Choose name first!");
+    }
+
+    private void writeCurrentOpponentToFile() throws IOException {
+        Files.write(CURRENT_PATH,
+                Arrays.asList(currentOpponent),
+                Charset.forName("UTF-8"));
+    }
+
+    private void findOpponentFile() throws IOException {
+        opponentFile = new File(OPPONENT_DIR, currentOpponent);
+        if (!opponentFile.exists()) {
+            opponentFile.createNewFile();
+        }
     }
 }
