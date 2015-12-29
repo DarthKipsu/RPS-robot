@@ -19,8 +19,10 @@ import javafx.util.Duration;
 public class GameDisplay {
     private final String COUNT_TEXT = "Let's start by counting down from 3. On "
             + "zero, reveal your rock, paper or scissors.";
-    
+
+    private Timeline timeline = new Timeline();
     private Stage stage;
+    private Text countDown;
 
     public GridPane gameGridPane(Stage stage, String opponent) {
         this.stage = stage;
@@ -28,9 +30,9 @@ public class GameDisplay {
         GridPane grid = rpcGrid();
         grid.add(new Text(welcome), 0, 0);
         grid.add(new Text(COUNT_TEXT), 0, 1);
-        Text countDown = new Text("");
+        countDown = new Text("");
         grid.add(countDown, 0, 2);
-        addTimelineEffects(countDown);
+        addTimelineEffects(8);
         return grid;
     }
 
@@ -42,13 +44,13 @@ public class GameDisplay {
         return grid;
     }
 
-    private void addTimelineEffects(Text countDown) {
-        Timeline timeline = new Timeline();
-        timeline.getKeyFrames().add(countFor(8, "3", countDown));
-        timeline.getKeyFrames().add(countFor(9, "2", countDown));
-        timeline.getKeyFrames().add(countFor(10, "1", countDown));
-        timeline.getKeyFrames().add(countFor(11, "Play!", countDown));
-        timeline.getKeyFrames().add(closeAfter(12));
+    public void addTimelineEffects(int waitTime) {
+        timeline.getKeyFrames().clear();
+        timeline.getKeyFrames().add(countFor(waitTime + 0, "3", countDown));
+        timeline.getKeyFrames().add(countFor(waitTime + 1, "2", countDown));
+        timeline.getKeyFrames().add(countFor(waitTime + 2, "1", countDown));
+        timeline.getKeyFrames().add(countFor(waitTime + 3, "Play!", countDown));
+        timeline.getKeyFrames().add(closeAfter(waitTime + 4));
         timeline.play();
     }
 

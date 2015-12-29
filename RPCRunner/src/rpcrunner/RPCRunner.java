@@ -5,7 +5,10 @@ import com.github.sarxos.webcam.log.WebcamLogConfigurator;
 import java.io.File;
 import java.io.IOException;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 /**
@@ -23,7 +26,7 @@ public class RPCRunner extends Application {
     private static final PlayerSelectorDisplay playerSelector =
             new PlayerSelectorDisplay();
     private static final GameDisplay game = new GameDisplay();
-    
+
     private static File opponentFile;
 
     public static void main(String[] args)
@@ -43,14 +46,23 @@ public class RPCRunner extends Application {
             String opponent,
             File file) throws IOException, InterruptedException {
         opponentFile = file;
-        stage.setScene(new Scene(
-                game.gameGridPane(stage, opponent)));
+        Scene scene = new Scene(game.gameGridPane(stage, opponent));
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, startGameEarly());
+        stage.setScene(scene);
         stage.show();
     }
-    
+
     public static void displayResults(Stage stage)
             throws IOException, InterruptedException {
         stage.setScene(new Scene(vision.resultGridPane(stage, opponentFile)));
         stage.show();
+    }
+
+    private static EventHandler startGameEarly() {
+        return (EventHandler<KeyEvent>) (KeyEvent t) -> {
+            if (t.getCode().equals(KeyCode.ENTER)) {
+                game.addTimelineEffects(0);
+            }
+        };
     }
 }
