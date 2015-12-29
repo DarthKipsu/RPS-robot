@@ -29,16 +29,16 @@ public class MachineVisionDisplay {
     private final String[] SIGNS = new String[]{"Rock", "Paper", "Scissors"};
     private final ProgramExecuter exe = new ProgramExecuter();
     private Stage stage;
-    private File opponentFile;
-    
+
     private Text predictionText = new Text();
     private int prediction;
+    private int ai_played;
     private BufferedImage image;
 
     public GridPane resultGridPane(Stage stage,
             File opponentFile) throws IOException, InterruptedException {
         this.stage = stage;
-        this.opponentFile = opponentFile;
+        ai_played = new AIPlayer(opponentFile).play();
         takeNewImage();
         return buildImageFrame();
     }
@@ -73,7 +73,27 @@ public class MachineVisionDisplay {
     }
 
     private void updatePredictionText() {
-        predictionText.setText("AI saw \"" + SIGNS[prediction] + "\"");
+        predictionText.setText("AI played \"" + SIGNS[ai_played] + "\" and saw "
+                + "\"" + SIGNS[prediction] + "\"\n" + winner());
+    }
+
+    private String winner() {
+        if (itsADraw()) {
+            return "It's a draw!";
+        } else if (humanPlayerWins()) {
+            return "You win!";
+        } else {
+            return "You lose!";
+        }
+    }
+
+    private boolean itsADraw() {
+        return prediction == ai_played;
+    }
+
+    private boolean humanPlayerWins() {
+        return (prediction == 0 && ai_played == 2)
+                | (prediction != 0 && prediction > ai_played);
     }
 
     private HBox buttons(GridPane grid) {
