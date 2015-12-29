@@ -120,6 +120,7 @@ public class MachineVisionDisplay {
                 ImageWriter.saveLabelToFile(prediction);
                 db.saveMatchOutcome(prediction, ai_played);
                 stage.close();
+                RPCRunner.playAgain(stage);
             } catch (IOException ex) {}
         };
     }

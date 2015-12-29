@@ -60,6 +60,12 @@ public class RPCRunner extends Application {
         stage.show();
     }
 
+    public static void playAgain(Stage stage) {
+        Scene scene = new Scene(game.playAgainGridPane());
+        stage.setScene(scene);
+        stage.show();
+    }
+
     private static EventHandler startGameEarly() {
         return (EventHandler<KeyEvent>) (KeyEvent t) -> {
             if (t.getCode().equals(KeyCode.ENTER)) {

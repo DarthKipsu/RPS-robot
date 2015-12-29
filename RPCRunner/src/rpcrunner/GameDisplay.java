@@ -36,6 +36,17 @@ public class GameDisplay {
         return grid;
     }
 
+    public GridPane playAgainGridPane() {
+        String again = "Play again? [enter]";
+        String quit = "Quit? [esc]";
+        countDown = new Text("");
+        GridPane grid = rpcGrid();
+        grid.add(new Text(again), 0, 0);
+        grid.add(new Text(quit), 0, 1);
+        grid.add(countDown, 0, 3);
+        return grid;
+    }
+
     private GridPane rpcGrid() {
         GridPane grid = new GridPane();
         grid.setHgap(10);
