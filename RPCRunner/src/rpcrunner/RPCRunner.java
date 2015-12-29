@@ -62,6 +62,8 @@ public class RPCRunner extends Application {
 
     public static void playAgain(Stage stage) {
         Scene scene = new Scene(game.playAgainGridPane());
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, startGameEarly());
+        scene.addEventHandler(KeyEvent.KEY_PRESSED, closeGame(stage));
         stage.setScene(scene);
         stage.show();
     }
@@ -70,6 +72,14 @@ public class RPCRunner extends Application {
         return (EventHandler<KeyEvent>) (KeyEvent t) -> {
             if (t.getCode().equals(KeyCode.ENTER)) {
                 game.addTimelineEffects(1);
+            }
+        };
+    }
+
+    private static EventHandler closeGame(Stage stage) {
+        return (EventHandler<KeyEvent>) (KeyEvent t) -> {
+            if (t.getCode().equals(KeyCode.ESCAPE)) {
+                stage.close();
             }
         };
     }
