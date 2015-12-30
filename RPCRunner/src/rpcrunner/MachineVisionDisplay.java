@@ -3,6 +3,7 @@ package rpcrunner;
 
 import data.OpponentDB;
 import data.ProgramExecuter;
+import image.DataWriter;
 
 import image.ImageWriter;
 import image.WebcamReader;
@@ -32,7 +33,8 @@ import javafx.stage.Stage;
 public class MachineVisionDisplay {
     private final String[] SIGNS = new String[]{"Rock", "Paper", "Scissors"};
     private final ProgramExecuter exe = new ProgramExecuter();
-    private final WebcamReader webcam = new WebcamReader();
+    private final DataWriter writer = new ImageWriter("data/");
+    private final WebcamReader webcam = new WebcamReader(writer);
     private Stage stage;
     private OpponentDB db;
 
@@ -118,9 +120,9 @@ public class MachineVisionDisplay {
         return (EventHandler<ActionEvent>) (ActionEvent t) -> {
             if (label.length > 0) prediction = label[0];
             try {
-                ImageWriter.saveBytesToFile(image);
-                ImageWriter.saveImageToFile(image);
-                ImageWriter.saveLabelToFile(prediction);
+                writer.saveBytesToFile(image);
+                writer.saveImageToFile(image);
+                writer.saveLabelToFile(prediction);
                 db.saveMatchOutcome(prediction, ai_played);
                 stage.close();
                 RPCRunner.playAgain(stage);

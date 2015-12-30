@@ -12,7 +12,7 @@ public class WebcamReaderTest {
 
     @Before
     public void setUp() {
-        webcam = new WebcamReader();
+        webcam = new WebcamReader(new ImageWriter("testdata/"));
     }
 
     @Test

@@ -14,15 +14,17 @@ public class WebcamReader {
     private final Webcam webcam;
     private final int scaledWidth;
     private final int scaledHeight;
+    private final DataWriter writer;
 
-    public WebcamReader(int scaledWidth, int scaledHeight) {
+    public WebcamReader(int scaledWidth, int scaledHeight, DataWriter writer) {
         this.scaledWidth = scaledWidth;
         this.scaledHeight = scaledHeight;
+        this.writer = writer;
         this.webcam = Webcam.getDefault();
     }
 
-    public WebcamReader() {
-        this(80, 65);
+    public WebcamReader(DataWriter writer) {
+        this(80, 65, writer);
     }
 
     /**
@@ -39,7 +41,7 @@ public class WebcamReader {
         Graphics2D g = binary.createGraphics();
         g.drawImage(image, 0, 0, scaledWidth, scaledHeight, null);
         
-        ImageWriter.saveTempToFile(binary);
+        writer.saveTempToFile(binary);
         return binary;
     }
 
