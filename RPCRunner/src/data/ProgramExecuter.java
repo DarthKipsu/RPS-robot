@@ -11,6 +11,8 @@ import java.io.InputStreamReader;
 public class ProgramExecuter {
 
     private final String IMAGE_INTERPETER = "../MachineLearning/prophet.py";
+    private final String GAME_STATISTICS = "../MachineLearning/statistics.py";
+    private BufferedReader stdInput;
 
     /**
      * Predicts the sign of an image saved to disc as temp file.
@@ -20,17 +22,25 @@ public class ProgramExecuter {
      * @return sign predicted
      */
     public int predictImageSign() throws IOException, InterruptedException {
-        return execute(IMAGE_INTERPETER);
+        execute(new String[]{IMAGE_INTERPETER});
+        return Integer.parseInt(stdInput.readLine());
     }
 
-    private int execute(String programName)
+    public GameStatistics getGameStatistics(String user)
+            throws IOException, InterruptedException {
+        execute(new String[]{GAME_STATISTICS, user});
+        return new GameStatistics(
+                Integer.parseInt(stdInput.readLine()),
+                Integer.parseInt(stdInput.readLine()),
+                Integer.parseInt(stdInput.readLine()));
+    }
+
+    private void execute(String[] programName)
             throws IOException, InterruptedException {
         Process process = new ProcessBuilder(programName).start();
         process.waitFor();
 
-        BufferedReader stdInput = new BufferedReader(
+        stdInput = new BufferedReader(
                 new InputStreamReader(process.getInputStream()));
-
-        return Integer.parseInt(stdInput.readLine());
     }
 }

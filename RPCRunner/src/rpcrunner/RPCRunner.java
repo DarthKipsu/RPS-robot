@@ -70,7 +70,8 @@ public class RPCRunner extends Application {
      * Calls a display to ask whether or not the player wants to play again or
      * quit. If a rematch is selected the stage will also handle that.
      */
-    public static void playAgain(Stage stage) {
+    public static void playAgain(Stage stage)
+            throws IOException, InterruptedException {
         Scene scene = new Scene(game.playAgainGridPane());
         scene.addEventHandler(KeyEvent.KEY_PRESSED, startGameEarly());
         scene.addEventHandler(KeyEvent.KEY_PRESSED, closeGame(stage));

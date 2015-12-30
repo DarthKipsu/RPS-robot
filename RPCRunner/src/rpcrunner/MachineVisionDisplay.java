@@ -123,7 +123,7 @@ public class MachineVisionDisplay {
                 db.saveMatchOutcome(prediction, ai_played);
                 stage.close();
                 RPCRunner.playAgain(stage);
-            } catch (IOException ex) {}
+            } catch (IOException | InterruptedException ex) {}
         };
     }
 

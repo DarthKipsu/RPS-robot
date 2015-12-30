@@ -1,6 +1,8 @@
 
 package rpcrunner;
 
+import data.GameStatistics;
+import data.ProgramExecuter;
 import java.io.IOException;
 
 import javafx.animation.KeyFrame;
@@ -20,8 +22,10 @@ public class GameDisplay {
     private final String COUNT_TEXT = "Let's start by counting down from 3. On "
             + "zero, reveal your rock, paper or scissors.";
 
+    private ProgramExecuter exe = new ProgramExecuter();
     private Timeline timeline = new Timeline();
     private Stage stage;
+    private String opponent;
     private Text countDown;
 
     /**
@@ -32,6 +36,7 @@ public class GameDisplay {
      */
     public GridPane gameGridPane(Stage stage, String opponent) {
         this.stage = stage;
+        this.opponent = opponent;
         String welcome = "Welcome " + opponent + ". I want to play a game.";
         GridPane grid = rpcGrid();
         grid.add(new Text(welcome), 0, 0);
@@ -48,14 +53,17 @@ public class GameDisplay {
      * 
      * TODO: Change username
      */
-    public GridPane playAgainGridPane() {
+    public GridPane playAgainGridPane() throws IOException, InterruptedException {
+        GameStatistics stats = exe.getGameStatistics(opponent);
         String again = "Play again? [enter]";
         String quit = "Quit? [esc]";
         countDown = new Text("");
         GridPane grid = rpcGrid();
-        grid.add(new Text(again), 0, 0);
-        grid.add(new Text(quit), 0, 1);
-        grid.add(countDown, 0, 3);
+        grid.add(new Text(stats.statistics()), 0, 0);
+        grid.add(new Text(stats.aiWinRatio()), 0, 1);
+        grid.add(new Text(again), 0, 3);
+        grid.add(new Text(quit), 0, 4);
+        grid.add(countDown, 0, 6);
         return grid;
     }
 
