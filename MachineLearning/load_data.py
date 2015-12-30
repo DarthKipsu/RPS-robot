@@ -21,3 +21,13 @@ def read_input_data():
     temp_file = open('../RPCRunner/data/temp', 'rb')
     data = np.fromstring(temp_file.read(650), dtype=np.uint8)
     return np.reshape(data, (-1, 650))
+
+def read_past_games(user):
+    """
+    Reads previous games by a given user. The outcome consists of a 2D array
+    with users games on the first column and ai on the second.
+    :return: past games in 2D array
+    """
+    with open('../RPCRunner/data/players/' + user) as file:
+        games = [[int(sign) for sign in line.split()] for line in file]
+    return np.array(games)
