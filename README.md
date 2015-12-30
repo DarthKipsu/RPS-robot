@@ -20,3 +20,5 @@ You should give execution rights to Python file prophet.py for Java program to b
 `$ chmod +x prophet.py`
 
 The orginal data set for hand sign recognition images is not yet available, but I will do it once I have collected more images. :) In the mean while you can create your own dataset by simply playing the game. You should start by creating at least one of each hand sign by running Labeler.java from data packet.
+
+**The program is still under development. While the game can be played, it uses very simple random guessing for computers part. Also the Lego robot part is not yet functional and no building instructions for the robot will be available until the final design of the robot is ready.**
