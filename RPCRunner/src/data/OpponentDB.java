@@ -14,13 +14,13 @@ import java.util.Arrays;
  * Opponent database will handle writing and reading of opponent data from file.
  */
 public class OpponentDB {
-    private final Path CURRENT_PATH = Paths.get("data/current");
-    private final String OPPONENT_DIR = "data/players/";
-    
+    private final Path CURRENT_PATH;
+    private final String OPPONENT_DIR;
     private String currentOpponent;
-    private File opponentFile;
 
-    public OpponentDB() {
+    public OpponentDB(String dataDirectory) {
+        CURRENT_PATH = Paths.get(dataDirectory + "/current");
+        OPPONENT_DIR = dataDirectory + "/players/";
         try {
             currentOpponent = Files.readAllLines(CURRENT_PATH,
                     Charset.forName("UTF-8")).get(0);
@@ -33,15 +33,15 @@ public class OpponentDB {
         return currentOpponent;
     }
 
-    public File setOpponent(String name) throws IOException {
+    public void setOpponent(String name) throws IOException {
         currentOpponent = name;
         writeCurrentOpponentToFile();
-        findOpponentFile();
-        return opponentFile;
     }
 
     public void saveMatchOutcome(int opponent, int ai) {
         try {
+            makeSureDirectoryExists(OPPONENT_DIR);
+            makeSureFileExists(OPPONENT_DIR + currentOpponent);
             Files.write(Paths.get(OPPONENT_DIR + currentOpponent),
                     Arrays.asList(opponent + " " + ai),
                     Charset.forName("UTF-8"),
@@ -57,15 +57,21 @@ public class OpponentDB {
     }
 
     private void writeCurrentOpponentToFile() throws IOException {
+        makeSureFileExists(CURRENT_PATH.toString());
         Files.write(CURRENT_PATH,
                 Arrays.asList(currentOpponent),
                 Charset.forName("UTF-8"));
     }
 
-    private void findOpponentFile() throws IOException {
-        opponentFile = new File(OPPONENT_DIR, currentOpponent);
-        if (!opponentFile.exists()) {
-            opponentFile.createNewFile();
+    private void makeSureDirectoryExists(String directory) throws IOException {
+        if (Files.notExists(Paths.get(directory))) {
+            new File(directory).mkdir();
+        }
+    }
+
+    private void makeSureFileExists(String file) throws IOException {
+        if (Files.notExists(Paths.get(file))) {
+            new File(file).createNewFile();
         }
     }
 }

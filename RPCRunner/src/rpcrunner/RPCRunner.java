@@ -19,6 +19,7 @@ import javafx.stage.Stage;
  * Initiates different stages displayed for player as the game runs.
  */
 public class RPCRunner extends Application {
+    private final String DATA_DIR = "data";
 
     private static OpponentDB db;
     private static MachineVisionDisplay vision;
@@ -26,8 +27,8 @@ public class RPCRunner extends Application {
     private static GameDisplay game;
 
     public RPCRunner() throws IOException {
-        db = new OpponentDB();
-        vision = new MachineVisionDisplay(new ImageWriter("data"), db);
+        db = new OpponentDB(DATA_DIR);
+        vision = new MachineVisionDisplay(new ImageWriter(DATA_DIR), db);
         playerSelector = new PlayerSelectorDisplay();
         game = new GameDisplay();
     }
