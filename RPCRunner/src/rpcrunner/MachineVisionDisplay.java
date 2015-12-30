@@ -33,20 +33,25 @@ import javafx.stage.Stage;
 public class MachineVisionDisplay {
     private final String[] SIGNS = new String[]{"Rock", "Paper", "Scissors"};
     private final ProgramExecuter exe = new ProgramExecuter();
-    private final DataWriter writer = new ImageWriter("data");
-    private final WebcamReader webcam = new WebcamReader(writer);
+    private final DataWriter writer;
+    private final WebcamReader webcam;
+    private final OpponentDB db;
     private Stage stage;
-    private OpponentDB db;
 
     private Text predictionText = new Text();
     private int prediction;
     private int ai_played;
     private BufferedImage image;
 
-    public GridPane resultGridPane(Stage stage,
-            OpponentDB db) throws IOException, InterruptedException {
-        this.stage = stage;
+    public MachineVisionDisplay( DataWriter writer, OpponentDB db) {
+        this.writer = writer;
+        this.webcam = new WebcamReader(writer);
         this.db = db;
+    }
+
+    public GridPane resultGridPane(Stage stage)
+            throws IOException, InterruptedException {
+        this.stage = stage;
         ai_played = new AIPlayer(db).play();
         takeNewImage();
         return buildImageFrame();

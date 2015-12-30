@@ -4,6 +4,7 @@ package rpcrunner;
 import data.OpponentDB;
 
 import com.github.sarxos.webcam.log.WebcamLogConfigurator;
+import image.ImageWriter;
 
 import java.io.IOException;
 
@@ -19,12 +20,17 @@ import javafx.stage.Stage;
  */
 public class RPCRunner extends Application {
 
-    private static final MachineVisionDisplay vision =
-            new MachineVisionDisplay();
-    private static final PlayerSelectorDisplay playerSelector =
-            new PlayerSelectorDisplay();
-    private static final GameDisplay game = new GameDisplay();
-    private static final OpponentDB db = new OpponentDB();
+    private static OpponentDB db;
+    private static MachineVisionDisplay vision;
+    private static PlayerSelectorDisplay playerSelector;
+    private static GameDisplay game;
+
+    public RPCRunner() throws IOException {
+        db = new OpponentDB();
+        vision = new MachineVisionDisplay(new ImageWriter("data"), db);
+        playerSelector = new PlayerSelectorDisplay();
+        game = new GameDisplay();
+    }
 
     /**
      * Configures webcam and launches the application.
@@ -62,7 +68,7 @@ public class RPCRunner extends Application {
      */
     public static void displayResults(Stage stage)
             throws IOException, InterruptedException {
-        stage.setScene(new Scene(vision.resultGridPane(stage, db)));
+        stage.setScene(new Scene(vision.resultGridPane(stage)));
         stage.show();
     }
 
