@@ -33,7 +33,7 @@ import javafx.stage.Stage;
 public class MachineVisionDisplay {
     private final String[] SIGNS = new String[]{"Rock", "Paper", "Scissors"};
     private final ProgramExecuter exe = new ProgramExecuter();
-    private final DataWriter writer = new ImageWriter("data/");
+    private final DataWriter writer = new ImageWriter("data");
     private final WebcamReader webcam = new WebcamReader(writer);
     private Stage stage;
     private OpponentDB db;

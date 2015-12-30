@@ -23,11 +23,12 @@ public class ImageWriter implements DataWriter {
     private final Path DATA;
     private final Path LABELS;
 
-    public ImageWriter(String dataDirectory) {
-        IMAGE_DIRECTORY = dataDirectory + "images/";
-        TEMPDATA = Paths.get(dataDirectory + "temp");
-        DATA = Paths.get(dataDirectory + "data");
-        LABELS = Paths.get(dataDirectory + "labels");
+    public ImageWriter(String dataDirectory) throws IOException {
+        makeSureNeededDirectoriesExist(dataDirectory);
+        IMAGE_DIRECTORY = dataDirectory + "/images/";
+        TEMPDATA = Paths.get(dataDirectory + "/temp");
+        DATA = Paths.get(dataDirectory + "/data");
+        LABELS = Paths.get(dataDirectory + "/labels");
     }
 
     /**
@@ -86,5 +87,21 @@ public class ImageWriter implements DataWriter {
                 Arrays.asList(""+label),
                 Charset.forName("UTF-8"),
                 StandardOpenOption.APPEND);
+    }
+
+    private void makeSureNeededDirectoriesExist(String dataDirectory)
+            throws IOException {
+        if (Files.notExists(Paths.get(dataDirectory))) {
+            new File(dataDirectory).mkdir();
+        }
+        if (Files.notExists(Paths.get(dataDirectory + "/images"))) {
+            new File(dataDirectory + "/images").mkdir();
+        }
+        if (Files.notExists(Paths.get(dataDirectory + "/data"))) {
+            new File(dataDirectory + "/data").createNewFile();
+        }
+        if (Files.notExists(Paths.get(dataDirectory + "/labels"))) {
+            new File(dataDirectory + "/labels").createNewFile();
+        }
     }
 }
