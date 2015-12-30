@@ -11,7 +11,19 @@ import java.io.IOException;
  * Read images from computer webcam.
  */
 public class WebcamReader {
-    private static Webcam webcam = Webcam.getDefault();
+    private final Webcam webcam;
+    private final int scaledWidth;
+    private final int scaledHeight;
+
+    public WebcamReader(int scaledWidth, int scaledHeight) {
+        this.scaledWidth = scaledWidth;
+        this.scaledHeight = scaledHeight;
+        this.webcam = Webcam.getDefault();
+    }
+
+    public WebcamReader() {
+        this(80, 65);
+    }
 
     /**
      * Take an image with the computer primary webcam and return a small black
@@ -19,10 +31,7 @@ public class WebcamReader {
      * The image is also saved to disc as temp file.
      * @return binary version of image taken
      */
-    public static BufferedImage takeBinaryImage() throws IOException {
-        int scaledWidth = 80;
-        int scaledHeight = 65;
-        
+    public BufferedImage takeBinaryImage() throws IOException {        
         BufferedImage image = takeImage();
         BufferedImage binary = new BufferedImage(scaledWidth, scaledHeight,
                 BufferedImage.TYPE_BYTE_BINARY);
@@ -34,7 +43,7 @@ public class WebcamReader {
         return binary;
     }
 
-	private static BufferedImage takeImage() {
+	private BufferedImage takeImage() {
         webcam.open();
         BufferedImage image = webcam.getImage();
         webcam.close();

@@ -23,6 +23,8 @@ public class Labeler {
     public static final String IMAGE_DIRECTORY = "data/images/";
     public static final Path DATA = Paths.get("data/data");
     public static final Path LABELS = Paths.get("data/labels");
+    
+    private static final WebcamReader webcam = new WebcamReader();
 
     public static void main(String[] args) throws IOException {
         takeNewDatasetImage();
@@ -34,7 +36,7 @@ public class Labeler {
     }
 
     private static void takeNewDatasetImage() throws IOException {
-        BufferedImage image = WebcamReader.takeBinaryImage();
+        BufferedImage image = webcam.takeBinaryImage();
         ImageWriter.saveImageToFile(image);
         ImageWriter.saveBytesToFile(image);
     }

@@ -32,6 +32,7 @@ import javafx.stage.Stage;
 public class MachineVisionDisplay {
     private final String[] SIGNS = new String[]{"Rock", "Paper", "Scissors"};
     private final ProgramExecuter exe = new ProgramExecuter();
+    private final WebcamReader webcam = new WebcamReader();
     private Stage stage;
     private OpponentDB db;
 
@@ -51,7 +52,7 @@ public class MachineVisionDisplay {
 
     private BufferedImage takeNewImage()
             throws IOException, InterruptedException {
-        image = WebcamReader.takeBinaryImage();
+        image = webcam.takeBinaryImage();
         prediction = exe.predictImageSign();
         updatePredictionText();
         return image;
