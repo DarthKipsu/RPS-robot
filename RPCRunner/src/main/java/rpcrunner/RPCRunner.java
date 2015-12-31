@@ -64,9 +64,7 @@ public class RPCRunner extends Application {
             throws IOException, InterruptedException {
         Scene scene = new Scene(game.gameGridPane(opponent));
         scene.addEventHandler(KeyEvent.KEY_PRESSED, startGameEarly());
-        RPCRunner.stage.close();
-        RPCRunner.stage.setScene(scene);
-        RPCRunner.stage.show();
+        changeSceneTo(scene);
     }
 
     /**
@@ -74,9 +72,7 @@ public class RPCRunner extends Application {
      */
     public static void displayResults()
             throws IOException, InterruptedException {
-        RPCRunner.stage.close();
-        stage.setScene(new Scene(vision.resultGridPane()));
-        stage.show();
+        changeSceneTo(new Scene(vision.resultGridPane()));
     }
 
     /**
@@ -88,6 +84,10 @@ public class RPCRunner extends Application {
         Scene scene = new Scene(game.playAgainGridPane());
         scene.addEventHandler(KeyEvent.KEY_PRESSED, startGameEarly());
         scene.addEventHandler(KeyEvent.KEY_PRESSED, closeGame());
+        changeSceneTo(scene);
+    }
+
+    private static void changeSceneTo(Scene scene) {
         RPCRunner.stage.close();
         RPCRunner.stage.setScene(scene);
         RPCRunner.stage.show();
