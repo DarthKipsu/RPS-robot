@@ -1,17 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package mechanics;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author kipsu
- */
 public class GameRulesTest {
     private GameRules rules = new GameRules();
 
