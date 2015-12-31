@@ -14,7 +14,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 /**
  * Displays player selection box before starting a game.
@@ -22,11 +21,9 @@ import javafx.stage.Stage;
 public class PlayerSelectorDisplay {
 
     private OpponentDB db;
-    private Stage stage;
 
-    public GridPane opponentNameGridPane(Stage stage, OpponentDB db) {
+    public GridPane opponentNameGridPane(OpponentDB db) {
         this.db = db;
-        this.stage = stage;
         GridPane grid = rpcGrid();
         TextField nameField = nameField();
         grid.add(new Text("Player name: "), 0, 0);
@@ -72,9 +69,7 @@ public class PlayerSelectorDisplay {
     private void selectPalyerAndContinue(TextField name) {
         try {
             db.setOpponent(name.getText());
-            stage.close();
-            RPCRunner.continueFromPlayerSelection(stage,
-                    db.getOpponent());
+            RPCRunner.continueFromPlayerSelection(db.getOpponent());
         } catch (IOException | InterruptedException ex) {
         }
     }

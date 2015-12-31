@@ -11,7 +11,6 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
@@ -24,7 +23,6 @@ public class GameDisplay {
 
     private ProgramExecuter exe = new ProgramExecuter();
     private Timeline timeline = new Timeline();
-    private Stage stage;
     private String opponent;
     private Text countDown;
 
@@ -34,8 +32,7 @@ public class GameDisplay {
      * is also used to initialize the class (when opponent is known).
      * @param opponent the username for the player
      */
-    public GridPane gameGridPane(Stage stage, String opponent) {
-        this.stage = stage;
+    public GridPane gameGridPane(String opponent) {
         this.opponent = opponent;
         String welcome = "Welcome " + opponent + ". I want to play a game.";
         GridPane grid = rpcGrid();
@@ -102,8 +99,7 @@ public class GameDisplay {
     private KeyFrame closeAfter(int duration) {
         return new KeyFrame(Duration.seconds(duration), (ActionEvent event) -> {
             try {
-                stage.close();
-                RPCRunner.displayResults(stage);
+                RPCRunner.displayResults();
             } catch (IOException | InterruptedException ex) {
             }
         });

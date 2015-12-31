@@ -19,7 +19,6 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 /**
  * Displays user input as JFrame.
@@ -34,22 +33,19 @@ public class MachineVisionDisplay {
     private final DataWriter writer;
     private final WebcamReader webcam;
     private final OpponentDB db;
-    private Stage stage;
 
     private Text predictionText = new Text();
     private int prediction;
     private int ai_played;
     private BufferedImage image;
 
-    public MachineVisionDisplay( DataWriter writer, OpponentDB db) {
+    public MachineVisionDisplay(DataWriter writer, OpponentDB db) {
         this.writer = writer;
         this.webcam = new WebcamReader(writer);
         this.db = db;
     }
 
-    public GridPane resultGridPane(Stage stage)
-            throws IOException, InterruptedException {
-        this.stage = stage;
+    public GridPane resultGridPane() throws IOException, InterruptedException {
         ai_played = new AIPlayer(db).play();
         takeNewImage();
         return buildImageFrame();
@@ -127,8 +123,7 @@ public class MachineVisionDisplay {
                 writer.saveImageToFile(image);
                 writer.saveLabelToFile(prediction);
                 db.saveMatchOutcome(prediction, ai_played);
-                stage.close();
-                RPCRunner.playAgain(stage);
+                RPCRunner.playAgain();
             } catch (IOException | InterruptedException ex) {}
         };
     }
