@@ -15,9 +15,25 @@ Machine learning and statistical part of the program uses Python with [NumPy](ht
 
 ### Installation
 
-You should give execution rights to Python file prophet.py for Java program to be able to run it:
+You should give execution rights to Python files for Java program to be able to run it, by running in the root folder:
 
-`$ chmod +x prophet.py`
+```markdown
+$ chmod +x MachineLearning/prophet.py
+$ chmod +x MachineLearning/statistics.py
+```
+
+And for running tests:
+
+```markdown
+$ chmod +x MachineLearning/mocks/mprophet.py
+$ chmod +x MachineLearning/mocks/mstatistics.py
+```
+
+Then make sure you have a webcam connected and run the program with [Gradle](http://gradle.org/) wrapper from **RPCRunner** folder:
+
+```markdown
+$ ./gradlew run
+```
 
 The orginal data set for hand sign recognition images is not yet available, but I will do it once I have collected more images. :) In the mean while you can create your own dataset by simply playing the game. You should start by creating at least one of each hand sign by running Labeler.java from data packet.
 
