@@ -1,6 +1,7 @@
 
 package rpcrunner;
 
+import mechanics.AIPlayer;
 import data.OpponentDB;
 import data.ProgramExecuter;
 import image.DataWriter;
@@ -19,6 +20,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import mechanics.GameRules;
 
 /**
  * Displays user input as JFrame.
@@ -30,6 +32,7 @@ import javafx.scene.text.Text;
 public class MachineVisionDisplay {
     private final String[] SIGNS = new String[]{"Rock", "Paper", "Scissors"};
     private final ProgramExecuter exe = new ProgramExecuter();
+    private final GameRules rules = new GameRules();
     private final DataWriter writer;
     private final WebcamReader webcam;
     private final OpponentDB db;
@@ -82,26 +85,8 @@ public class MachineVisionDisplay {
 
     private void updatePredictionText() {
         predictionText.setText("AI played \"" + SIGNS[ai_played] + "\" and saw "
-                + "\"" + SIGNS[prediction] + "\"\n" + winner());
-    }
-
-    private String winner() {
-        if (itsADraw()) {
-            return "It's a draw!";
-        } else if (humanPlayerWins()) {
-            return "You win!";
-        } else {
-            return "You lose!";
-        }
-    }
-
-    private boolean itsADraw() {
-        return prediction == ai_played;
-    }
-
-    private boolean humanPlayerWins() {
-        return (prediction == 0 && ai_played == 2)
-                | (prediction != 0 && prediction > ai_played);
+                + "\"" + SIGNS[prediction] + "\"\n"
+                + rules.winner(prediction, ai_played));
     }
 
     private HBox buttons(GridPane grid) {

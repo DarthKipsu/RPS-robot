@@ -1,5 +1,5 @@
 
-package rpcrunner;
+package mechanics;
 
 import data.OpponentDB;
 
