@@ -10,9 +10,19 @@ import java.io.InputStreamReader;
  */
 public class ProgramExecuter {
 
-    private final String IMAGE_INTERPETER = "../MachineLearning/prophet.py";
-    private final String GAME_STATISTICS = "../MachineLearning/statistics.py";
+    private final String IMAGE_INTERPETER;
+    private final String GAME_STATISTICS;
     private BufferedReader stdInput;
+
+    public ProgramExecuter(String IMAGE_INTERPETER, String GAME_STATISTICS) {
+        this.IMAGE_INTERPETER = IMAGE_INTERPETER;
+        this.GAME_STATISTICS = GAME_STATISTICS;
+    }
+
+    public ProgramExecuter() {
+        this("../MachineLearning/prophet.py",
+                "../MachineLearning/statistics.py");
+    }
 
     /**
      * Predicts the sign of an image saved to disc as temp file.
