@@ -4,8 +4,6 @@ package rpcrunner;
 import data.OpponentDB;
 import data.ProgramExecuter;
 import image.DataWriter;
-
-import image.ImageWriter;
 import image.WebcamReader;
 
 import java.awt.image.BufferedImage;

@@ -1,0 +1,24 @@
+apply plugin: 'java' 
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+  mavenCentral()
+}
+
+
+dependencies {
+  compile "com.github.sarxos:webcam-capture:0.3.4"
+  compile "commons-io:commons-io:2.4"
+  compile "junit:junit:4.12"
+}
+
+jar {
+  baseName = 'rpc-robot'
+  version =  '0.1.0'
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.3'
+}

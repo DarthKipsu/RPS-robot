@@ -1,6 +1,8 @@
 
 package data;
 
+import data.GameStatistics;
+import data.ProgramExecuter;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

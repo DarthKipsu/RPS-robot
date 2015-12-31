@@ -2,9 +2,9 @@
 package rpcrunner;
 
 import data.OpponentDB;
+import image.ImageWriter;
 
 import com.github.sarxos.webcam.log.WebcamLogConfigurator;
-import image.ImageWriter;
 
 import java.io.IOException;
 
