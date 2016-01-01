@@ -6,7 +6,7 @@ package rpc;
 public class Main {
 
 	public static void main(String[] args) {
-		// Test finger moving functionality
-		new TestProgram().run();
+		// Test moving the entire arm.
+		new HandMover().moveHandForPlay();
 	}
 }
