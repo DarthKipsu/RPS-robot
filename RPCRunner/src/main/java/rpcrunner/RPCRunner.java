@@ -33,7 +33,7 @@ public class RPCRunner extends Application {
         db = new OpponentDB(DATA_DIR);
         vision = new MachineVisionDisplay(new ImageWriter(DATA_DIR), db);
         playerSelector = new PlayerSelectorDisplay();
-        game = new GameDisplay("00:16:53:08:D4:4D");
+        game = new GameDisplay(db, "00:16:53:08:D4:4D");
     }
 
     /**
@@ -71,9 +71,9 @@ public class RPCRunner extends Application {
     /**
      * Calls a display to show the outcome of the game just played.
      */
-    public static void displayResults()
+    public static void displayResults(int ai_played)
             throws IOException, InterruptedException {
-        changeSceneTo(new Scene(vision.resultGridPane()));
+        changeSceneTo(new Scene(vision.resultGridPane(ai_played)));
     }
 
     /**

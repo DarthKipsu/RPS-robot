@@ -1,7 +1,6 @@
 
 package rpcrunner;
 
-import mechanics.AIPlayer;
 import data.OpponentDB;
 import data.ProgramExecuter;
 import image.DataWriter;
@@ -48,8 +47,9 @@ public class MachineVisionDisplay {
         this.db = db;
     }
 
-    public GridPane resultGridPane() throws IOException, InterruptedException {
-        ai_played = new AIPlayer(db).play();
+    public GridPane resultGridPane(int ai_played)
+            throws IOException, InterruptedException {
+        this.ai_played = ai_played;//new AIPlayer(db).play();
         takeNewImage();
         return buildImageFrame();
     }

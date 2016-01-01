@@ -2,6 +2,7 @@
 package rpcrunner;
 
 import data.GameStatistics;
+import data.OpponentDB;
 import data.ProgramExecuter;
 import java.io.IOException;
 
@@ -13,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lejos.pc.comm.NXTCommException;
+import mechanics.AIPlayer;
 import nxt.NxtConnector;
 
 /**
@@ -22,15 +24,19 @@ import nxt.NxtConnector;
 public class GameDisplay {
     private final String COUNT_TEXT = "Let's start by counting down from 3. On "
             + "zero, reveal your rock, paper or scissors.";
+    private final ProgramExecuter exe = new ProgramExecuter();
+    private final Timeline timeline = new Timeline();
+    private final OpponentDB db;
     private final NxtConnector nxt;
+    private final AIPlayer ai;
 
-    private ProgramExecuter exe = new ProgramExecuter();
-    private Timeline timeline = new Timeline();
     private String opponent;
     private Text countDown;
 
-    public GameDisplay(String nxtName) throws NXTCommException {
+    public GameDisplay(OpponentDB db, String nxtName) throws NXTCommException {
+        this.db = db;
         nxt = new NxtConnector(nxtName);
+        ai = new AIPlayer(db);
     }
 
     /**
@@ -106,7 +112,7 @@ public class GameDisplay {
     private KeyFrame closeAfter(int duration) {
         return new KeyFrame(Duration.seconds(duration), (ActionEvent event) -> {
             try {
-                RPCRunner.displayResults();
+                RPCRunner.displayResults(ai.play());
             } catch (IOException | InterruptedException ex) {
             }
         });
