@@ -36,15 +36,15 @@ public class NxtConnector {
 		output.flush();
 		System.out.println("Received " + input.readInt());
 		wait(1000);
+	}
 
+	public void closeConnection() throws IOException {
 		System.out.println("Close");
 		output.writeInt(0);
 		output.flush();
 		System.out.println("Received " + input.readInt());
 		wait(1000);
-	}
 
-	public void closeConnection() throws IOException {
 		output.close();
 		input.close();
 		connector.close();

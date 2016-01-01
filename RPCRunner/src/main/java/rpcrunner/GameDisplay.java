@@ -33,9 +33,9 @@ public class GameDisplay {
     private String opponent;
     private Text countDown;
 
-    public GameDisplay(OpponentDB db, String nxtName) throws NXTCommException {
+    public GameDisplay(OpponentDB db, String nxtpipe) throws NXTCommException {
         this.db = db;
-        nxt = new NxtConnector(nxtName);
+        nxt = new NxtConnector(nxtpipe);
         ai = new AIPlayer(db);
     }
 

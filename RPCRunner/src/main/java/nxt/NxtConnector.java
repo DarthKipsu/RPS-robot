@@ -1,20 +1,18 @@
 
 package nxt;
 
-import lejos.pc.comm.NXTComm;
-import lejos.pc.comm.NXTCommException;
-import lejos.pc.comm.NXTCommFactory;
-import lejos.pc.comm.NXTInfo;
+import java.io.File;
 
 /**
- * Handles communications between the main program and NXT brick.
+ * Handles communications between the main program and NXT brick connector.
  */
 public class NxtConnector {
-    private final NXTComm connection;
-    private final NXTInfo info;
 
-    public NxtConnector(String nxtName) throws NXTCommException {
-        connection = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
-        info = new NXTInfo(NXTCommFactory.BLUETOOTH, "NXT", nxtName);
+    public NxtConnector(String nxtpipe) {
+        if (new File(nxtpipe).exists()) {
+            System.out.println("Use robot");
+        } else {
+            System.out.println("Dont use robot");
+        }
     }
 }
