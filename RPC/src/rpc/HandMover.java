@@ -10,10 +10,12 @@ public class HandMover {
 		Motor.C.setSpeed(150);
 	}
 
-	public void moveHandForPlay() {
-		liftHand();
-		wait(1000);
+	public void play() {
 		shakeHand(3);
+	}
+
+	public void liftHand() {
+		Motor.C.rotate(-100);
 	}
 
 	private void shakeHand(int times) {
@@ -27,17 +29,5 @@ public class HandMover {
 
 	private void raiseHand() {
 		Motor.C.rotate(100);
-	}
-
-	private void liftHand() {
-		Motor.C.rotate(-100);
-	}
-
-	private void wait(int ms) {
-		try {
-			Thread.sleep(ms);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 }

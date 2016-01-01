@@ -62,7 +62,7 @@
 			<arg file="${binary}" />
 			<arg value="-od" />
 			<arg file="${debug}" />
-			<arg value="-verbose" />
+			<arg value="-v" />
 			<arg value="${full.main.class}" />
 		</java>
 	</target>
@@ -82,7 +82,7 @@
 			<arg value="-od" />
 			<arg file="${debug}" />
 			<arg value="-gr" />
-			<arg value="-verbose" />
+			<arg value="-v" />
 			<arg value="${full.main.class}" />
 		</java>
 	</target>

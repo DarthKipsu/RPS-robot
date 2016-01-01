@@ -1,12 +1,54 @@
 package rpc;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import lejos.nxt.comm.BTConnection;
+import lejos.nxt.comm.Bluetooth;
+
+
 /**
  * Main program to start rock, paper & scissors program
  */
 public class Main {
 
-	public static void main(String[] args) {
-		// Test moving the entire arm.
-		new HandMover().moveHandForPlay();
+	public static void main(String[] args) throws IOException {
+		System.out.println("Waiting...");
+		BTConnection btc = Bluetooth.waitForConnection();
+
+		DataInputStream input = btc.openDataInputStream();
+		DataOutputStream output = btc.openDataOutputStream();
+
+		System.out.println("Reading data");
+		
+		boolean continueReading = true;
+		while (continueReading) {
+			int n = input.readInt();
+			if (n == 0) {
+				continueReading = false;
+			} else if (n == 1) {
+				new HandMover().liftHand();
+			} else if (n == 2) {
+				new HandMover().play();
+			}
+			System.out.println("read " + n);
+			output.writeInt(n);
+			output.flush();
+		}
+
+		System.out.println("Closing connections");
+		input.close();
+		output.close();
+		wait(500); // wait for data to drain
+		btc.close();
+	}
+	
+	private static void wait(int ms) {
+		try {
+			Thread.sleep(ms);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }
