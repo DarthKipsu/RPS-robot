@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import lejos.pc.comm.NXTCommException;
 
 /**
  * Initiates different stages displayed for player as the game runs.
@@ -28,11 +29,11 @@ public class RPCRunner extends Application {
 
     private static Stage stage;
 
-    public RPCRunner() throws IOException {
+    public RPCRunner() throws IOException, NXTCommException {
         db = new OpponentDB(DATA_DIR);
         vision = new MachineVisionDisplay(new ImageWriter(DATA_DIR), db);
         playerSelector = new PlayerSelectorDisplay();
-        game = new GameDisplay();
+        game = new GameDisplay("00:16:53:08:D4:4D");
     }
 
     /**

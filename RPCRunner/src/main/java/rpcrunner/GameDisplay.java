@@ -12,6 +12,8 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import lejos.pc.comm.NXTCommException;
+import nxt.NxtConnector;
 
 /**
  * Display for the actual game stage, where player and AI select what they will
@@ -20,11 +22,16 @@ import javafx.util.Duration;
 public class GameDisplay {
     private final String COUNT_TEXT = "Let's start by counting down from 3. On "
             + "zero, reveal your rock, paper or scissors.";
+    private final NxtConnector nxt;
 
     private ProgramExecuter exe = new ProgramExecuter();
     private Timeline timeline = new Timeline();
     private String opponent;
     private Text countDown;
+
+    public GameDisplay(String nxtName) throws NXTCommException {
+        nxt = new NxtConnector(nxtName);
+    }
 
     /**
      * Display the initial game stage, where game introduction and instructions
