@@ -18,6 +18,7 @@ public class Main {
 
 		DataInputStream input = btc.openDataInputStream();
 		DataOutputStream output = btc.openDataOutputStream();
+		HandMover hand = new HandMover();
 
 		System.out.println("Reading data");
 		
@@ -27,9 +28,9 @@ public class Main {
 			if (n == 0) {
 				continueReading = false;
 			} else if (n == 1) {
-				new HandMover().liftHand();
+				hand.liftHand();
 			} else if (n == 2) {
-				new HandMover().play();
+				hand.play();
 			}
 			System.out.println("read " + n);
 			output.writeInt(n);
@@ -39,10 +40,13 @@ public class Main {
 		System.out.println("Closing connections");
 		input.close();
 		output.close();
+		if (hand.getHandPosition() == HandPosition.UP) {
+			hand.lowerHand();
+		}
 		wait(500); // wait for data to drain
 		btc.close();
 	}
-	
+
 	private static void wait(int ms) {
 		try {
 			Thread.sleep(ms);
