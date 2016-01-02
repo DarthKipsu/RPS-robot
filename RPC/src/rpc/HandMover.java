@@ -22,24 +22,26 @@ public class HandMover {
 		shakeHand(3);
 	}
 
-	private void shakeHand(int times) {
-		for	(int i = 0; i < times; i++) {
-			lowerHand();
-			if (i != times - 1) {
-				liftHand();
-			}
-		}
-	}
-
 	public void liftHand() {
 		if (handPosition == HandPosition.DOWN) {
 			Motor.C.rotate(-100);
+			handPosition = HandPosition.UP;
 		}
 	}
 
 	public void lowerHand() {
 		if (handPosition == HandPosition.UP) {
 			Motor.C.rotate(100);
+			handPosition = HandPosition.DOWN;
+		}
+	}
+
+	private void shakeHand(int times) {
+		for	(int i = 0; i < times; i++) {
+			lowerHand();
+			if (i != times - 1) {
+				liftHand();
+			}
 		}
 	}
 }
