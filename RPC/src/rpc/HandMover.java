@@ -7,23 +7,27 @@ import lejos.nxt.Motor;
  */
 public class HandMover {
 	private HandPosition handPosition;
+	private FingerMover fingers;
 
 	public HandMover() {
 		Motor.C.setSpeed(150);
 		handPosition = HandPosition.DOWN;
+		fingers = new FingerMover();
 	}
 
 	public HandPosition getHandPosition() {
 		return handPosition;
 	}
 
-	public void play() {
+	public void play(int sign) {
 		liftHand();
 		shakeHand(3);
+		fingers.playSign(sign);
 	}
 
 	public void liftHand() {
 		if (handPosition == HandPosition.DOWN) {
+			fingers.closeFist();
 			Motor.C.rotate(-100);
 			handPosition = HandPosition.UP;
 		}
@@ -31,6 +35,7 @@ public class HandMover {
 
 	public void lowerHand() {
 		if (handPosition == HandPosition.UP) {
+			fingers.closeFist();
 			Motor.C.rotate(100);
 			handPosition = HandPosition.DOWN;
 		}

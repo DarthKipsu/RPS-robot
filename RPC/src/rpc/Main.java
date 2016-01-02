@@ -25,12 +25,12 @@ public class Main {
 		boolean continueReading = true;
 		while (continueReading) {
 			int n = input.readInt();
-			if (n == 0) {
+			if (n == -1) {
 				continueReading = false;
-			} else if (n == 1) {
+			} else if (n == 0 | n == 1 | n == 2) {
+				hand.play(n);
+			} else if (n == 3) {
 				hand.liftHand();
-			} else if (n == 2) {
-				hand.play();
 			}
 			System.out.println("read " + n);
 			output.writeInt(n);

@@ -28,19 +28,20 @@ public class NxtConnector {
 
     public void prepareForGame() {
         if (nxtInUse) {
-            writeToPipe("1");
+            writeToPipe("3");
         }
     }
 
-    public void playAGame() {
+    public void playAGame(int sign) {
         if (nxtInUse) {
-            writeToPipe("2");
+            System.out.println("Playing a game of " + sign);
+            writeToPipe("" + sign);
         }
     }
 
     public void closeRobot() {
         if (nxtInUse) {
-            writeToPipe("0");
+            writeToPipe("-1");
         }
     }
 

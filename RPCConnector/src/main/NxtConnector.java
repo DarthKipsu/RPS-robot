@@ -40,7 +40,7 @@ public class NxtConnector {
 			output.writeInt(command);
 			output.flush();
 			input.readInt();
-			if (command == 0) {
+			if (command == -1) {
 				continueReading = false;
 			}
     	}

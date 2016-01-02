@@ -32,6 +32,7 @@ public class GameDisplay {
 
     private String opponent;
     private Text countDown;
+    private int ai_played;
 
     public GameDisplay(OpponentDB db, NxtConnector nxt) throws NXTCommException {
         this.db = db;
@@ -113,7 +114,8 @@ public class GameDisplay {
 
     private KeyFrame startCountdown(int duration, String count, Text countDown) {
         return new KeyFrame(Duration.seconds(duration), (ActionEvent event) -> {
-            nxt.playAGame();
+            ai_played = ai.play();
+            nxt.playAGame(ai_played);
             countDown.setText(count);
         });
     }
@@ -121,7 +123,7 @@ public class GameDisplay {
     private KeyFrame closeAfter(int duration) {
         return new KeyFrame(Duration.seconds(duration), (ActionEvent event) -> {
             try {
-                RPCRunner.displayResults(ai.play());
+                RPCRunner.displayResults(ai_played);
             } catch (IOException | InterruptedException ex) {
             }
         });
