@@ -33,9 +33,9 @@ public class GameDisplay {
     private String opponent;
     private Text countDown;
 
-    public GameDisplay(OpponentDB db, String nxtpipe) throws NXTCommException {
+    public GameDisplay(OpponentDB db, NxtConnector nxt) throws NXTCommException {
         this.db = db;
-        nxt = new NxtConnector(nxtpipe);
+        this.nxt = nxt;
         ai = new AIPlayer(db);
     }
 
@@ -47,6 +47,7 @@ public class GameDisplay {
      */
     public GridPane gameGridPane(String opponent) {
         this.opponent = opponent;
+        nxt.prepareForGame();
         String welcome = "Welcome " + opponent + ". I want to play a game.";
         GridPane grid = rpcGrid();
         grid.add(new Text(welcome), 0, 0);
@@ -65,6 +66,7 @@ public class GameDisplay {
      */
     public GridPane playAgainGridPane() throws IOException, InterruptedException {
         GameStatistics stats = exe.getGameStatistics(opponent);
+        nxt.prepareForGame();
         String again = "Play again? [enter]";
         String quit = "Quit? [esc]";
         countDown = new Text("");
@@ -87,7 +89,7 @@ public class GameDisplay {
      */
     public void addTimelineEffects(int waitTime) {
         timeline.getKeyFrames().clear();
-        timeline.getKeyFrames().add(countFor(waitTime + 0, "3", countDown));
+        timeline.getKeyFrames().add(startCountdown(waitTime + 0, "3", countDown));
         timeline.getKeyFrames().add(countFor(waitTime + 1, "2", countDown));
         timeline.getKeyFrames().add(countFor(waitTime + 2, "1", countDown));
         timeline.getKeyFrames().add(countFor(waitTime + 3, "Play!", countDown));
@@ -105,6 +107,13 @@ public class GameDisplay {
 
     private KeyFrame countFor(int duration, String count, Text countDown) {
         return new KeyFrame(Duration.seconds(duration), (ActionEvent event) -> {
+            countDown.setText(count);
+        });
+    }
+
+    private KeyFrame startCountdown(int duration, String count, Text countDown) {
+        return new KeyFrame(Duration.seconds(duration), (ActionEvent event) -> {
+            nxt.playAGame();
             countDown.setText(count);
         });
     }

@@ -15,6 +15,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import lejos.pc.comm.NXTCommException;
+import nxt.NxtConnector;
 
 /**
  * Initiates different stages displayed for player as the game runs.
@@ -25,6 +26,7 @@ public class RPCRunner extends Application {
     private static OpponentDB db;
     private static MachineVisionDisplay vision;
     private static PlayerSelectorDisplay playerSelector;
+    private static NxtConnector nxt;
     private static GameDisplay game;
 
     private static Stage stage;
@@ -33,7 +35,8 @@ public class RPCRunner extends Application {
         db = new OpponentDB(DATA_DIR);
         vision = new MachineVisionDisplay(new ImageWriter(DATA_DIR), db);
         playerSelector = new PlayerSelectorDisplay();
-        game = new GameDisplay(db, "../RPCConnector/nxtpipe");
+        nxt = new NxtConnector("../RPCConnector/nxtpipe");
+        game = new GameDisplay(db, nxt);
     }
 
     /**
@@ -105,6 +108,7 @@ public class RPCRunner extends Application {
     private static EventHandler closeGame() {
         return (EventHandler<KeyEvent>) (KeyEvent t) -> {
             if (t.getCode().equals(KeyCode.ESCAPE)) {
+                nxt.closeRobot();
                 RPCRunner.stage.close();
             }
         };
