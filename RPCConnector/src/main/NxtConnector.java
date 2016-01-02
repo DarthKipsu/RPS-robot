@@ -1,5 +1,6 @@
 package main;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -24,6 +25,27 @@ public class NxtConnector {
 		input = connector.getDataIn();
     }
 
+    public void readPipeInstructions(BufferedReader pipe) throws IOException {
+    	boolean continueReading = true;
+    	while (continueReading) {
+    		Integer command;
+    		try {
+				command = Integer.parseInt(pipe.readLine());
+			} catch (Exception e) {
+				System.out.println("waiting...");
+				wait(500);
+				continue;
+			}
+			System.out.println("Command: " + command);
+			output.writeInt(command);
+			output.flush();
+			input.readInt();
+			if (command == 0) {
+				continueReading = false;
+			}
+    	}
+    }
+
 	public void testConnection() throws IOException {
 		System.out.println("Ask to raise hand");
 		output.writeInt(1);
@@ -42,8 +64,7 @@ public class NxtConnector {
 		System.out.println("Close");
 		output.writeInt(0);
 		output.flush();
-		System.out.println("Received " + input.readInt());
-		wait(1000);
+		wait(500);
 
 		output.close();
 		input.close();

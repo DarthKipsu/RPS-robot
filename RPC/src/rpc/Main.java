@@ -7,7 +7,6 @@ import java.io.IOException;
 import lejos.nxt.comm.BTConnection;
 import lejos.nxt.comm.Bluetooth;
 
-
 /**
  * Main program to start rock, paper & scissors program
  */
