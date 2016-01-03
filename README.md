@@ -11,6 +11,34 @@ The program saves all images taken during the game to add to it's hand image dat
 
 [![Play example](http://img.youtube.com/vi/TqbpJkDx-Y8/0.jpg)](http://www.youtube.com/watch?v=TqbpJkDx-Y8)
 
+### Game mechanics
+
+#### RPC
+
+Program running inside the Lego NXT brick. Moves the robotic arm to imitate playing rock-paper-scissors.
+
+The program reads play instructions from Bluetooth as received integers. If it receives 0 it will play rock, with 1 paper and 2 scissors. With 3 it will raise the robotic arm to lifted position as a preperation for a starting game (you can also start a game from lowered arm position) and with -1 it will shut down the program.
+
+To play a game with the robotic arm, this is the program you need to initiate first and it will wait idle until it gets any instructions.
+
+#### RPCConnector
+
+This program is used to send instructions to the NXT brick through Bluetooth. It works as a dumb middle piece between the main program and RPC program.
+
+RPCConnector will create a file which it will then repeatedly poll for new lines. If a new line with instructions is read, it will forward the instruction to RPC through Bluetooth. If the command is -1 (shut down), it will forward the command to the RPC, then remove the communications file it created and shut down.
+
+After starting the RPC program on NXT brick, you ned to start this program before starting the main program as the main program will only use the robotic arm if it discovers the communications file created by RPCConnector.
+
+#### RPCRunner
+
+The main program running the game. It will keep a file system with players usernames and previous games, the hand sign database and initiate the Python programs for machine learning and statistical purposes.
+
+The program will first ask for a username for the player, then initiate a game consisting of: selecting what the AI will play, (if robotic arm is in use, write instructions to play the selected sign to the file RPCConnector is reading) take a picture of the players hand sign after a game, use Python program prophet.py to interpret the sign and then display game results to user.
+
+The user verifies if the program interpreted the hand sign correctly or changes the sign if it was wrong and the program will then save the taken image and it's label to the database to keep increasing the database size after each game. If the image is not good, the user may also decide to take a new image altogether.
+
+After saving the image, the game will also save the game outcome to players history and show statistics of previous games with the given username and allow the player to play again or close the program. If program is closed and the robotic arm is in use, the program will also write shut down instructions to the communications file between the main program and RPCConnector to make sure all the programs are properly closed.
+
 ### Languages
 
 The main running program and the Lego Mindstorms robot is implemented using Java. Lego robot has a [leJOS](http://www.lejos.org/) operating system running inside it and main program on computer runs commands to it using the LejOS interface. User interface uses [JafaFX](http://docs.oracle.com/javase/8/javase-clienttechnologies.htm).
