@@ -90,11 +90,11 @@ public class GameDisplay {
      */
     public void addTimelineEffects(int waitTime) {
         timeline.getKeyFrames().clear();
-        timeline.getKeyFrames().add(startCountdown(waitTime + 0, "3", countDown));
-        timeline.getKeyFrames().add(countFor(waitTime + 1, "2", countDown));
-        timeline.getKeyFrames().add(countFor(waitTime + 2, "1", countDown));
-        timeline.getKeyFrames().add(countFor(waitTime + 3, "Play!", countDown));
-        timeline.getKeyFrames().add(closeAfter(waitTime + 4));
+        timeline.getKeyFrames().add(startCountdown(waitTime + 1, "3", countDown));
+        timeline.getKeyFrames().add(countFor(waitTime + 2, "2", countDown));
+        timeline.getKeyFrames().add(countFor(waitTime + 3, "1", countDown));
+        timeline.getKeyFrames().add(countFor(waitTime + 4, "Play!", countDown));
+        timeline.getKeyFrames().add(closeAfter(waitTime + 5));
         timeline.play();
     }
 
