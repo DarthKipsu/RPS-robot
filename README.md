@@ -7,6 +7,10 @@ Image detection from the webcam is implemented using a [Perceptron](https://en.w
 
 The program saves all images taken during the game to add to it's hand image database, so that the more the program is played the better it will learn to identify which sign the human player played.
 
+#### Play example
+
+[![Play example](http://img.youtube.com/vi/TqbpJkDx-Y8/0.jpg)](http://www.youtube.com/watch?v=TqbpJkDx-Y8)
+
 ### Languages
 
 The main running program and the Lego Mindstorms robot is implemented using Java. Lego robot has a [leJOS](http://www.lejos.org/) operating system running inside it and main program on computer runs commands to it using the LejOS interface. User interface uses [JafaFX](http://docs.oracle.com/javase/8/javase-clienttechnologies.htm).
