@@ -41,6 +41,8 @@ The orginal data set for hand sign recognition images is not yet available, but 
 
 ### Installation with robotic hand
 
+Build a robotic hand with Lego Mindstorms set. ![For example like this.](/robot-building.md)
+
 Install the main program as described above, but do not run it yet. The program will automatically detect wether or not a Lego robot is available. *The RPC program is for NXT brick and if you want to use EV3 brick, you need to make some changes to the RPC program to use EV3 motors instead of NXT motors, but other than that it should work similarly.*
 
 These instructions are for Linux operating system:
