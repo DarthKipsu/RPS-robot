@@ -52,12 +52,12 @@ These instructions are for Linux operating system:
 5. Add a shared folder from the computer settings > Shared folders > Add shared folder with folder name RPCConnect and path to wherever your RPCConnect folder is located. The shared folder should have full access (no read-only).
 5. Do the same for folder name RPC.
 6. Start the newly created computer and select RojbOS from the opening screen.
-7. Flaxh LejOs operating system to your NXT brick by connecting it to the computer with USB (make sure virtualbox usb is on) and select Applications > leJOS > leJOS Tools > leJOS NXT Flasher GUI > Start program.
-8. Onse LejOs is setup in the brick, make sure you have bluetooth connection to your NXT by clicking the bluetooth icon on your computer upper right corner and selecting Set up new device, click Forward, select NXT brick, click Forward and Close.
+7. Flaxh LejOs operating system to your NXT brick by connecting it to the computer with USB and select Applications > leJOS > leJOS Tools > leJOS NXT Flasher GUI > Start program.
+8. Onse LejOs is setup in the brick, make sure you have bluetooth connection to your NXT.
 9. Open terminal and create folders for both projects: `mkdir /opt/lejos-workspace/RPC` and `mkdir /opt/lejos-workspace/RPCConnect`
 10. Then connect those folder to the folders on your own computer: `sudo mount -t vboxsf -o uid=$UID,gid=$(id -g) RPCConnect /opt/lejos-workspace/RPCConnect` and `sudo mount -t vboxsf -o uid=$UID,gid=$(id -g) RPC /opt/lejos-workspace/RPC`
 11. Open Eclipse from the desktop and import the two projects just linked.
-12. Make sure NXT is on and right click on the build.xml file in RPC project and select Run As > Ant Build. The program is transferred to NXT with bluetooth and started.
+12. Make sure NXT is on and run RPC project as Ant build. The program is transferred to NXT with bluetooth and started.
 13. Once you see `waiting...` on the screen of your NXT, run the RPCConnector project (as normal Java Application)
 14. Start the main program on your own computer as described in the installation without robotic hand.
 
