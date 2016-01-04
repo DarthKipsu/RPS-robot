@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import load_data as reader
 import numpy as np
 from random import randint

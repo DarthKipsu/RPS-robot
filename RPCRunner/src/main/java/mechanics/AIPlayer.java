@@ -2,6 +2,8 @@
 package mechanics;
 
 import data.OpponentDB;
+import data.ProgramExecuter;
+import java.io.IOException;
 
 import java.util.Random;
 
@@ -9,13 +11,20 @@ import java.util.Random;
  * This class is used for deciding in which way the computer AI will play.
  */
 public class AIPlayer {
-    private OpponentDB db;
+    private final OpponentDB db;
+    private final ProgramExecuter exe;
 
-    public AIPlayer(OpponentDB db) {
+    public AIPlayer(OpponentDB db, ProgramExecuter exe) {
         this.db = db;
+        this.exe = exe;
     }
 
     public int play() {
-        return new Random().nextInt(3);
+        try {
+            return exe.nextAiMoveAgainst(db.getOpponent());
+        } catch (IOException | InterruptedException ex) {
+            System.out.println(ex);
+            return new Random().nextInt(3);
+        }
     }
 }

@@ -37,7 +37,7 @@ public class GameDisplay {
     public GameDisplay(OpponentDB db, NxtConnector nxt) throws NXTCommException {
         this.db = db;
         this.nxt = nxt;
-        ai = new AIPlayer(db);
+        ai = new AIPlayer(db, exe);
     }
 
     /**

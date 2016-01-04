@@ -12,16 +12,20 @@ public class ProgramExecuter {
 
     private final String IMAGE_INTERPETER;
     private final String GAME_STATISTICS;
+    private final String AI_MOVE;
     private BufferedReader stdInput;
 
-    public ProgramExecuter(String IMAGE_INTERPETER, String GAME_STATISTICS) {
+    public ProgramExecuter(String IMAGE_INTERPETER, String GAME_STATISTICS,
+            String AI_MOVE) {
         this.IMAGE_INTERPETER = IMAGE_INTERPETER;
         this.GAME_STATISTICS = GAME_STATISTICS;
+        this.AI_MOVE = AI_MOVE;
     }
 
     public ProgramExecuter() {
         this("../MachineLearning/prophet.py",
-                "../MachineLearning/statistics.py");
+                "../MachineLearning/statistics.py",
+                "../MachineLearning/rpc_ai.py");
     }
 
     /**
@@ -43,6 +47,12 @@ public class ProgramExecuter {
                 Integer.parseInt(stdInput.readLine()),
                 Integer.parseInt(stdInput.readLine()),
                 Integer.parseInt(stdInput.readLine()));
+    }
+
+    public int nextAiMoveAgainst(String user)
+            throws IOException, InterruptedException {
+        execute(new String[]{AI_MOVE, user});
+        return Integer.parseInt(stdInput.readLine());
     }
 
     private void execute(String[] programName)
