@@ -7,6 +7,8 @@
 
 classes/
 
+MachineLearning/.cache/
+
 MotorAndSensorTest/bin/
 MotorAndSensorTest/build/
 MotorAndSensorTest/doc/
