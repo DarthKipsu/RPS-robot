@@ -2,6 +2,7 @@
 package mechanics;
 
 import data.OpponentDB;
+import data.ProgramExecuter;
 
 import java.io.File;
 
@@ -15,7 +16,11 @@ import static org.junit.Assert.*;
  * @author kipsu
  */
 public class AIPlayerTest {
-    private final AIPlayer ai = new AIPlayer(new OpponentDB("testdata"));
+    private final ProgramExecuter exe = new ProgramExecuter(
+            "../MachineLearning/mocks/mprophet.py",
+            "../MachineLearning/mocks/mstatistics.py",
+            "../MachineLearning/mocks/mrpc_ai.py");
+    private final AIPlayer ai = new AIPlayer(new OpponentDB("testdata"), exe);
 
     @After
     public void tearDown() throws Exception {

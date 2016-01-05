@@ -1,15 +1,14 @@
 
 package data;
 
-import data.GameStatistics;
-import data.ProgramExecuter;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class ProgramExecuterTest {
     private final ProgramExecuter exe = new ProgramExecuter(
             "../MachineLearning/mocks/mprophet.py",
-            "../MachineLearning/mocks/mstatistics.py");
+            "../MachineLearning/mocks/mstatistics.py",
+            "../MachineLearning/mocks/mrpc_ai.py");
 
     @Test
     public void predictImageSignReturnsThePredictedSign() throws Exception {
@@ -33,5 +32,10 @@ public class ProgramExecuterTest {
     public void statisticsReturnsCorrectAiWinRatioString() throws Exception {
         String expected = "AI win ratio is 62%";
         assertEquals(expected, exe.getGameStatistics("some user").aiWinRatio());
+    }
+
+    @Test
+    public void nextAiMoveReturnsNextAiMove() throws Exception {
+        assertEquals(0, exe.predictImageSign());
     }
 }
