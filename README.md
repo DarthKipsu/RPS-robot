@@ -54,6 +54,7 @@ First you should give execution rights to Python files for Java program to be ab
 ```markdown
 $ chmod +x MachineLearning/prophet.py
 $ chmod +x MachineLearning/statistics.py
+$ chmod +x MachineLearning/rpc_ai.py
 ```
 
 Also if you want to run tests:
@@ -61,6 +62,7 @@ Also if you want to run tests:
 ```markdown
 $ chmod +x MachineLearning/mocks/mprophet.py
 $ chmod +x MachineLearning/mocks/mstatistics.py
+$ chmod +x MachineLearning/mocks/mrpc_ai.py
 ```
 
 Then make sure you have a webcam connected and run the program with [Gradle](http://gradle.org/) wrapper from **RPCRunner** folder:
@@ -86,8 +88,8 @@ These instructions are for Linux operating system:
 5. Add a shared folder from the computer settings > Shared folders > Add shared folder with folder name RPCConnect and path to wherever your RPCConnect folder is located. The shared folder should have full access (no read-only).
 5. Do the same for folder name RPC.
 6. Start the newly created computer and select RojbOS from the opening screen.
-7. Flaxh LejOs operating system to your NXT brick by connecting it to the computer with USB and select Applications > leJOS > leJOS Tools > leJOS NXT Flasher GUI > Start program.
-8. Onse LejOs is setup in the brick, make sure you have bluetooth connection to your NXT.
+7. Flash LejOs operating system to your NXT brick by connecting it to the computer with USB and select Applications > leJOS > leJOS Tools > leJOS NXT Flasher GUI > Start program.
+8. Once LejOs is setup in the brick, make sure you have bluetooth connection to your NXT.
 9. Open terminal and create folders for both projects: `mkdir /opt/lejos-workspace/RPC` and `mkdir /opt/lejos-workspace/RPCConnect`
 10. Then connect those folder to the folders on your own computer: `sudo mount -t vboxsf -o uid=$UID,gid=$(id -g) RPCConnect /opt/lejos-workspace/RPCConnect` and `sudo mount -t vboxsf -o uid=$UID,gid=$(id -g) RPC /opt/lejos-workspace/RPC`
 11. Open Eclipse from the desktop and import the two projects just linked.
@@ -97,4 +99,4 @@ These instructions are for Linux operating system:
 
 The next time you run the program, you can simply select the program from your NXT, once it's running, run RPCConnector from VirtualBox computer and finally run the main program from your own computer.
 
-**The program is still under development. While the game can be played, it uses very simple random guessing for computers part.**
+**The program is still under development. While the game can be played, the algorithm to choose which sign the AI will play is not completed.**
