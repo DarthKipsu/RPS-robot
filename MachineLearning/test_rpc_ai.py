@@ -3,16 +3,9 @@ import numpy as np
 
 EMPTY_ARRAY = np.array([])
 SCISSORS = [2,2]
-
-
-""" Test bayes_from_next_pairs function """
-
-def test_next_pairs_with_no_previous_games():
-    assert ai.bayes_from_next_pairs(EMPTY_ARRAY) == -1
-
-def test_next_pairs_with_only_few_previous_games():
-    previous_games = np.array([[1,1], [2,0]])
-    assert ai.bayes_from_next_pairs(previous_games) == -1
+FULL_TEST = np.array([[0,1], [2,1], [1,0], [0,1], [2,1], [1,0], [0,1], [2,1],
+    [1,0], [0,1], [2,1], [1,0], [0,2], [0,1], [1,1], [1,2], [2,1], [2,2],
+    [0,2], [2,1]])
 
 
 """ Test next_signs_for_pair function """
@@ -34,14 +27,79 @@ def test_next_signs_for_pair_when_one_mathing_pair_with_next_pair():
 
 def test_next_signs_for_pair_whith_all_mathing_pairs():
     previous_games = np.array([SCISSORS, SCISSORS, SCISSORS, SCISSORS])
-    assert (ai.next_signs_for_pair(SCISSORS, previous_games) == [2,2,2]).all()
+    assert np.allclose(ai.next_signs_for_pair(SCISSORS, previous_games), [2,2,2])
 
 def test_next_signs_for_pair_whith_some_mathing_pairs():
     previous_games = np.array([SCISSORS, [1,0], SCISSORS, [0,0], SCISSORS,
         SCISSORS, [2,1]])
-    assert (ai.next_signs_for_pair(SCISSORS, previous_games) == [1,0,2,2]).all()
+    assert np.allclose(ai.next_signs_for_pair(SCISSORS, previous_games), [1,0,2,2])
 
 def test_next_signs_for_pair_whith_some_mathing_pairs2():
     previous_games = np.array([[1,1], [1,0], [2,1], [1,1], [0,0], [2,0],
         [1,1], [1,1], [2,1], [1,1]])
-    assert (ai.next_signs_for_pair([1,1], previous_games) == [1,0,1,2]).all()
+    assert np.allclose(ai.next_signs_for_pair([1,1], previous_games), [1,0,1,2])
+
+
+""" Test rps_frequencies function """
+
+def test_frequencies_when_array_is_empty():
+    assert np.allclose(ai.rps_frequencies(EMPTY_ARRAY), [0,0,0])
+
+def test_frequencies_when_array_has_one_digit():
+    signs = np.array([1])
+    assert np.allclose(ai.rps_frequencies(signs), [0,1,0])
+
+def test_frequencies_when_array_has_two_different_digits():
+    signs = np.array([1,0])
+    assert np.allclose(ai.rps_frequencies(signs), [1,1,0])
+
+def test_frequencies_when_array_has_three_different_digits():
+    signs = np.array([1,0,2])
+    assert np.allclose(ai.rps_frequencies(signs), [1,1,1])
+
+def test_frequencies_when_array_has_same_digits():
+    signs = np.array([1,0,1,1])
+    assert np.allclose(ai.rps_frequencies(signs), [1,3,0])
+
+
+""" Test bayes_from_next_pairs function """
+
+def test_next_pairs_with_no_previous_games():
+    bfnp, bfnp_size = ai.bayes_from_next_pairs(EMPTY_ARRAY)
+    assert bfnp_size == 0
+    assert np.allclose(bfnp, [0,0,0])
+
+def test_next_pairs_with_two_different_games():
+    previous_games = np.array([[1,1], [2,0]])
+    bfnp, bfnp_size = ai.bayes_from_next_pairs(previous_games)
+    assert bfnp_size == 0
+    assert np.allclose(bfnp, [0,0,0])
+
+def test_next_pairs_with_all_different_games():
+    previous_games = np.array([[1,1], [2,0], [2,1], [0,2], [1,0]])
+    bfnp, bfnp_size = ai.bayes_from_next_pairs(previous_games)
+    assert bfnp_size == 0
+    assert np.allclose(bfnp, [0,0,0])
+
+def test_next_pairs_with_one_repeated():
+    previous_games = np.array([[1,1], [2,0], [2,1], [0,2], [1,1]])
+    bfnp, bfnp_size = ai.bayes_from_next_pairs(previous_games)
+    assert bfnp_size == 1
+    assert np.allclose(bfnp, [-1,1,0])
+
+def test_next_pairs_with_two_repeated():
+    previous_games = np.array([[1,1], [2,0], [1,1], [0,2], [1,1]])
+    bfnp, bfnp_size = ai.bayes_from_next_pairs(previous_games)
+    assert bfnp_size == 2
+    assert np.allclose(bfnp, [-0.5,0,0.5])
+
+def test_next_pairs_with_several_repeated():
+    previous_games = np.array([[2,2], [1,0], [2,2], [0,0], [2,2], [2,2], [2,2]])
+    bfnp, bfnp_size = ai.bayes_from_next_pairs(previous_games)
+    assert bfnp_size == 4
+    assert np.allclose(bfnp, [-0.25,0.25,0])
+
+def test_next_pairs_with_test_player():
+    bfnp, bfnp_size = ai.bayes_from_next_pairs(FULL_TEST)
+    assert bfnp_size == 5
+    assert np.allclose(bfnp, [0.6,0.2,-0.8])

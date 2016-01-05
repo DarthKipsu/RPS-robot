@@ -4,6 +4,8 @@ import numpy as np
 from random import randint
 import sys
 
+SIGN_WEIGHTS = np.array([[0,1,-1], [-1,0,1], [1,-1,0]])
+
 def next_signs_for_pair(pair, past_games):
     if (past_games.size == 0):
         return []
@@ -15,20 +17,24 @@ def next_signs_for_pair(pair, past_games):
     next_pair_indexes += 1
     return past_games[next_pair_indexes][:,0]
 
+def rps_frequencies(signs):
+    zeros = np.zeros(3)
+    if (len(signs) == 0):
+        return zeros
+    frequencies = np.bincount(signs)
+    return np.concatenate((frequencies, zeros))[:3]
+
 def bayes_from_next_pairs(past_games):
-    if (past_games.size == 0):
-        return -1
+    if (len(past_games) == 0):
+        return np.zeros(3), 0
     last_game = past_games[len(past_games) - 1]
     similar_game_next_moves = next_signs_for_pair(last_game, past_games)
-    next_move_freq = np.bincount(similar_game_next_moves)
-    if (next_move_freq.size < 3):
-        return -1
+    next_move_freq = rps_frequencies(similar_game_next_moves)
     freq_sum = np.sum(next_move_freq)
-    most_likely_next = np.argmax(next_move_freq)
-    user_percentages = np.array([next_move_freq[i] / freq_sum for i in range(3)])
-    weights = np.array([[0,1,-1], [-1,0,1], [1,-1,0]])
-    bayes_weights = np.dot(weights, user_percentages)
-    return np.argmin(bayes_weights)
+    if (freq_sum == 0):
+        return np.zeros(3), 0
+    next_move_freq /= freq_sum
+    return np.dot(SIGN_WEIGHTS, next_move_freq), freq_sum
 
 def select_next_move_against(user):
     """
@@ -41,8 +47,8 @@ def select_next_move_against(user):
     TODO: when not enough similar game indexes use only what user played.
     """
     past_games = reader.read_past_games(user)
-    bfnp = bayes_from_next_pairs(past_games)
-    if (bfnp >= 0):
+    bfnp, bfnp_size = bayes_from_next_pairs(past_games)
+    if (bfnp_size > 0):
         print(bfnp)
     else:
         print(randint(0,2))
