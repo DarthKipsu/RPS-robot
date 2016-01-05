@@ -49,7 +49,7 @@ def select_next_move_against(user):
     past_games = reader.read_past_games(user)
     bfnp, bfnp_size = bayes_from_next_pairs(past_games)
     if (bfnp_size > 0):
-        print(bfnp)
+        print(np.argmin(bfnp))
     else:
         print(randint(0,2))
 
