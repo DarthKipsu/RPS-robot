@@ -3,6 +3,7 @@ import numpy as np
 
 EMPTY_ARRAY = np.array([])
 SCISSORS = [2,2]
+SMALL_TEST = np.array([[2,2], [1,0], [2,2], [0,0], [2,2], [2,2], [2,2]])
 FULL_TEST = np.array([[0,1], [2,1], [1,0], [0,1], [2,1], [1,0], [0,1], [2,1],
     [1,0], [0,1], [2,1], [1,0], [0,2], [0,1], [1,1], [1,2], [2,1], [2,2],
     [0,2], [2,1]])
@@ -93,13 +94,40 @@ def test_next_pairs_with_two_repeated():
     assert bfnp_size == 2
     assert np.allclose(bfnp, [-0.5,0,0.5])
 
-def test_next_pairs_with_several_repeated():
-    previous_games = np.array([[2,2], [1,0], [2,2], [0,0], [2,2], [2,2], [2,2]])
-    bfnp, bfnp_size = ai.bayes_from_next_pairs(previous_games)
+def test_next_pairs_with_small_test():
+    bfnp, bfnp_size = ai.bayes_from_next_pairs(SMALL_TEST)
     assert bfnp_size == 4
     assert np.allclose(bfnp, [-0.25,0.25,0])
 
-def test_next_pairs_with_test_player():
+def test_next_pairs_with_full_test():
     bfnp, bfnp_size = ai.bayes_from_next_pairs(FULL_TEST)
     assert bfnp_size == 5
     assert np.allclose(bfnp, [0.6,0.2,-0.8])
+
+
+""" Test select_next_move_against(user) function """
+
+def test_next_move_returns_integer_between_0_2_when_no_past_games():
+    for i in range(100):
+        next_move, method = ai.select_next_move_against(EMPTY_ARRAY)
+        assert next_move >= 0
+        assert next_move <= 2
+
+def test_next_move_returns_random_int_when_no_past_games():
+    next_move, method = ai.select_next_move_against(EMPTY_ARRAY)
+    assert method == "random"
+
+def test_next_move_returns_random_int_when_to_few_past_games():
+    previous_games = np.array([[1,1], [2,0], [2,1], [0,2], [1,0]])
+    next_move, method = ai.select_next_move_against(previous_games)
+    assert method == "random"
+
+def test_next_move_with_small_test():
+    next_move, method = ai.select_next_move_against(SMALL_TEST)
+    assert next_move == 0
+    assert method == "Bayes next pairs"
+
+def test_next_move_with_full_test():
+    next_move, method = ai.select_next_move_against(FULL_TEST)
+    assert next_move == 2
+    assert method == "Bayes next pairs"

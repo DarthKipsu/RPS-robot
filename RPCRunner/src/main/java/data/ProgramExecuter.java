@@ -55,6 +55,15 @@ public class ProgramExecuter {
         return Integer.parseInt(stdInput.readLine());
     }
 
+    public String methodForChoosingAiMove() {
+        try {
+            String method = stdInput.readLine();
+            return "AI chose using " + method;
+        } catch (Exception ex) {
+            return "Could not read how AI move was selected.";
+        }
+    }
+
     private void execute(String[] programName)
             throws IOException, InterruptedException {
         Process process = new ProcessBuilder(programName).start();

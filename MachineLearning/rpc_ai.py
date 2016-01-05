@@ -36,22 +36,22 @@ def bayes_from_next_pairs(past_games):
     next_move_freq /= freq_sum
     return np.dot(SIGN_WEIGHTS, next_move_freq), freq_sum
 
-def select_next_move_against(user):
+def select_next_move_against(past_games):
     """
     First version of machine learning for selecting what to play next. Chooses
     by looking at what the user has most frequently played after the same kind
     of choise as made with last game and chooses the bayes optimal from them.
 
     If no sufficient data is available, prints a random digit between 0 to 2
-
-    TODO: when not enough similar game indexes use only what user played.
     """
-    past_games = reader.read_past_games(user)
     bfnp, bfnp_size = bayes_from_next_pairs(past_games)
     if (bfnp_size > 0):
-        print(np.argmin(bfnp))
+        return np.argmin(bfnp), "Bayes next pairs"
     else:
-        print(randint(0,2))
+        return randint(0,2), "random"
 
 if __name__ == "__main__":
-    select_next_move_against(sys.argv[1])
+    past_games = reader.read_past_games(sys.argv[1])
+    next_move, method = select_next_move_against(past_games)
+    print(next_move)
+    print(method)

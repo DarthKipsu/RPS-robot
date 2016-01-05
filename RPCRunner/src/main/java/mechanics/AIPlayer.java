@@ -21,7 +21,9 @@ public class AIPlayer {
 
     public int play() {
         try {
-            return exe.nextAiMoveAgainst(db.getOpponent());
+            int ai_move = exe.nextAiMoveAgainst(db.getOpponent());
+            System.out.println(exe.methodForChoosingAiMove());
+            return ai_move;
         } catch (IOException | InterruptedException ex) {
             System.out.println(ex);
             return new Random().nextInt(3);
