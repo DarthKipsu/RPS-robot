@@ -4,6 +4,32 @@ import numpy as np
 from random import randint
 import sys
 
+def next_signs_for_pair(pair, past_games):
+    if (past_games.size == 0):
+        return []
+    last_i = len(past_games) - 1
+    next_pair_indexes = np.array(np.where((past_games[:last_i,0] == pair[0])
+        & (past_games[:last_i,1] == pair[1]))[0])
+    if (next_pair_indexes.size == 0):
+        return []
+    next_pair_indexes += 1
+    return past_games[next_pair_indexes][:,0]
+
+def bayes_from_next_pairs(past_games):
+    if (past_games.size == 0):
+        return -1
+    last_game = past_games[len(past_games) - 1]
+    similar_game_next_moves = next_signs_for_pair(last_game, past_games)
+    next_move_freq = np.bincount(similar_game_next_moves)
+    if (next_move_freq.size < 3):
+        return -1
+    freq_sum = np.sum(next_move_freq)
+    most_likely_next = np.argmax(next_move_freq)
+    user_percentages = np.array([next_move_freq[i] / freq_sum for i in range(3)])
+    weights = np.array([[0,1,-1], [-1,0,1], [1,-1,0]])
+    bayes_weights = np.dot(weights, user_percentages)
+    return np.argmin(bayes_weights)
+
 def select_next_move_against(user):
     """
     First version of machine learning for selecting what to play next. Chooses
@@ -15,28 +41,11 @@ def select_next_move_against(user):
     TODO: when not enough similar game indexes use only what user played.
     """
     past_games = reader.read_past_games(user)
-    last_i = len(past_games) - 1
-    if (last_i < 3):
+    bfnp = bayes_from_next_pairs(past_games)
+    if (bfnp >= 0):
+        print(bfnp)
+    else:
         print(randint(0,2))
-        return
-    last_game = past_games[last_i]
-    similar_game_indexes = np.array(np.where((past_games[:last_i,0] == last_game[0])
-        & (past_games[:last_i,1] == last_game[1]))[0])
-    if (len(similar_game_indexes) < 1):
-        print(randint(0,2))
-        return
-    similar_game_indexes[:] += 1
-    similar_game_next_moves = past_games[similar_game_indexes][:,0]
-    next_move_freq = np.bincount(similar_game_next_moves)
-    while (len(next_move_freq) < 3):
-        print(randint(0,2))
-        return
-    freq_sum = np.sum(next_move_freq)
-    most_likely_next = np.argmax(next_move_freq)
-    user_percentages = np.array([next_move_freq[i] / freq_sum for i in range(3)])
-    weights = np.array([[0,1,-1], [-1,0,1], [1,-1,0]])
-    bayes_weights = np.dot(weights, user_percentages)
-    print(np.argmin(bayes_weights))
 
 if __name__ == "__main__":
     select_next_move_against(sys.argv[1])
