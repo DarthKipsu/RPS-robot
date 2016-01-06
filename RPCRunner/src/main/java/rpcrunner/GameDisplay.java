@@ -13,7 +13,6 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import lejos.pc.comm.NXTCommException;
 import mechanics.AIPlayer;
 import nxt.NxtConnector;
 
@@ -34,7 +33,7 @@ public class GameDisplay {
     private Text countDown;
     private int ai_played;
 
-    public GameDisplay(OpponentDB db, NxtConnector nxt) throws NXTCommException {
+    public GameDisplay(OpponentDB db, NxtConnector nxt) {
         this.db = db;
         this.nxt = nxt;
         ai = new AIPlayer(db, exe);

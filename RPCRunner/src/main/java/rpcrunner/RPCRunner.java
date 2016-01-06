@@ -14,7 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import lejos.pc.comm.NXTCommException;
 import nxt.NxtConnector;
 
 /**
@@ -31,7 +30,7 @@ public class RPCRunner extends Application {
 
     private static Stage stage;
 
-    public RPCRunner() throws IOException, NXTCommException {
+    public RPCRunner() throws IOException {
         db = new OpponentDB(DATA_DIR);
         vision = new MachineVisionDisplay(new ImageWriter(DATA_DIR), db);
         playerSelector = new PlayerSelectorDisplay();
