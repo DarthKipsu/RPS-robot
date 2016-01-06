@@ -8,7 +8,7 @@ SIGN_WEIGHTS = np.array([[0,1,-1], [-1,0,1], [1,-1,0]])
 
 def next_signs_for_pair(pair, past_games):
     """
-    Takes a previous game pair [user playerd, ai played], and a list of past 
+    Takes a previous game pair [user played, ai played], and a list of past 
     games. Finds all similar pairs from past games and returns a list of signs
     user played right after playing that pair.
     """
@@ -17,6 +17,21 @@ def next_signs_for_pair(pair, past_games):
     last_i = len(past_games) - 1
     next_pair_indexes = np.array(np.where((past_games[:last_i,0] == pair[0])
         & (past_games[:last_i,1] == pair[1]))[0])
+    if (next_pair_indexes.size == 0):
+        return []
+    next_pair_indexes += 1
+    return past_games[next_pair_indexes][:,0]
+
+def next_signs_for_single(sign, past_games):
+    """
+    Takes a previous game sign [user played], and a list of past games. Finds
+    all similar user played signs from past games and returns a list of signs
+    user played right after playing that sign.
+    """
+    if (past_games.size == 0):
+        return []
+    last_i = len(past_games) - 1
+    next_pair_indexes = np.array(np.where(past_games[:last_i,0] == sign[0])[0])
     if (next_pair_indexes.size == 0):
         return []
     next_pair_indexes += 1
@@ -43,6 +58,23 @@ def bayes_from_next_pairs(past_games):
         return np.zeros(3), 0
     last_game = past_games[len(past_games) - 1]
     similar_game_next_moves = next_signs_for_pair(last_game, past_games)
+    next_move_freq = rps_frequencies(similar_game_next_moves)
+    freq_sum = np.sum(next_move_freq)
+    if (freq_sum == 0):
+        return np.zeros(3), 0
+    next_move_freq /= freq_sum
+    return np.dot(SIGN_WEIGHTS, next_move_freq), freq_sum
+
+def bayes_from_next_singles(past_games):
+    """
+    Takes a list of past games and based on similar signs than the sign last
+    played, returns a double containing first the weights for choosing each sign,
+    and the amount of datapoints used to calculate those weights.
+    """
+    if (len(past_games) == 0):
+        return np.zeros(3), 0
+    last_game = past_games[len(past_games) - 1]
+    similar_game_next_moves = next_signs_for_single([last_game[0]], past_games)
     next_move_freq = rps_frequencies(similar_game_next_moves)
     freq_sum = np.sum(next_move_freq)
     if (freq_sum == 0):
