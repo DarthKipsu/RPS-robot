@@ -54,7 +54,7 @@ def bayes_from_next_pairs(past_games):
     played, returns a duble containing first the weights for choosing each sign,
     and the amount of datapoints used to calculate those weights.
     """
-    if (len(past_games) == 0):
+    if (len(past_games) <= 1):
         return np.zeros(3), 0
     last_game = past_games[len(past_games) - 1]
     similar_game_next_moves = next_signs_for_pair(last_game, past_games)
@@ -71,7 +71,7 @@ def bayes_from_next_singles(past_games):
     played, returns a double containing first the weights for choosing each sign,
     and the amount of datapoints used to calculate those weights.
     """
-    if (len(past_games) == 0):
+    if (len(past_games) <= 1):
         return np.zeros(3), 0
     last_game = past_games[len(past_games) - 1]
     similar_game_next_moves = next_signs_for_single([last_game[0]], past_games)
@@ -92,8 +92,14 @@ def select_next_move_against(past_games):
     (TODO: select better boundaries for sufficient data)
     """
     bfnp, bfnp_size = bayes_from_next_pairs(past_games)
-    if (bfnp_size > 0):
-        return np.argmin(bfnp), "Bayes next pairs"
+    bfns, bfns_size = bayes_from_next_singles(past_games)
+    if ((bfnp_size > 1) | (bfns_size > 1)):
+        scaled_bfnp = np.multiply(bfnp_size, bfnp)
+        scaled_bfns = np.multiply(bfns_size, bfns) # TODO: this should produce floats instead of integers
+        if (scaled_bfnp[np.argmin(scaled_bfnp)] < scaled_bfns[np.argmin(scaled_bfns)]):
+            return np.argmin(scaled_bfnp), "Bayes next pairs"
+        else:
+            return np.argmin(scaled_bfns), "Bayes next singles"
     else:
         return randint(0,2), "random"
 

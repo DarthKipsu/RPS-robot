@@ -198,7 +198,7 @@ def test_next_move_returns_random_int_when_to_few_past_games():
 def test_next_move_with_small_test():
     next_move, method = ai.select_next_move_against(SMALL_TEST)
     assert next_move == 0
-    assert method == "Bayes next pairs"
+    assert method == "Bayes next singles"
 
 def test_next_move_with_full_test():
     next_move, method = ai.select_next_move_against(FULL_TEST)
