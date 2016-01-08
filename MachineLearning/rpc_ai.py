@@ -79,8 +79,7 @@ def bayes_from_next_singles(past_games):
 def select_next_move_against(past_games):
     """
     Uses machine learning to select what to play next. Calls for different ways
-    to determine the weights for selecting different signs (TODO: currently
-    running just one way to do it)
+    to determine the weights for selecting different signs.
 
     If no sufficient data is available, return a random digit between 0 to 2
     (TODO: select better boundaries for sufficient data)
