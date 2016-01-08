@@ -60,9 +60,6 @@ def bayes_from_next_pairs(past_games):
     similar_game_next_moves = next_signs_for_pair(last_game, past_games)
     next_move_freq = rps_frequencies(similar_game_next_moves)
     freq_sum = np.sum(next_move_freq)
-    if (freq_sum == 0):
-        return np.zeros(3), 0
-    next_move_freq /= freq_sum
     return np.dot(SIGN_WEIGHTS, next_move_freq), freq_sum
 
 def bayes_from_next_singles(past_games):
@@ -77,9 +74,6 @@ def bayes_from_next_singles(past_games):
     similar_game_next_moves = next_signs_for_single([last_game[0]], past_games)
     next_move_freq = rps_frequencies(similar_game_next_moves)
     freq_sum = np.sum(next_move_freq)
-    if (freq_sum == 0):
-        return np.zeros(3), 0
-    next_move_freq /= freq_sum
     return np.dot(SIGN_WEIGHTS, next_move_freq), freq_sum
 
 def select_next_move_against(past_games):
@@ -94,12 +88,10 @@ def select_next_move_against(past_games):
     bfnp, bfnp_size = bayes_from_next_pairs(past_games)
     bfns, bfns_size = bayes_from_next_singles(past_games)
     if ((bfnp_size > 1) | (bfns_size > 1)):
-        scaled_bfnp = np.multiply(bfnp_size, bfnp)
-        scaled_bfns = np.multiply(bfns_size, bfns) # TODO: this should produce floats instead of integers
-        if (scaled_bfnp[np.argmin(scaled_bfnp)] < scaled_bfns[np.argmin(scaled_bfns)]):
-            return np.argmin(scaled_bfnp), "Bayes next pairs"
+        if (bfnp[np.argmin(bfnp)] <= bfns[np.argmin(bfns)]):
+            return np.argmin(bfnp), "Bayes next pairs"
         else:
-            return np.argmin(scaled_bfns), "Bayes next singles"
+            return np.argmin(bfns), "Bayes next singles"
     else:
         return randint(0,2), "random"
 

@@ -7,6 +7,8 @@ SMALL_TEST = np.array([[2,2], [1,0], [2,2], [0,0], [2,2], [2,2], [2,2]])
 FULL_TEST = np.array([[0,1], [2,1], [1,0], [2,0], [2,1], [1,0], [0,1], [2,1],
     [1,0], [0,1], [2,1], [1,0], [0,2], [0,1], [1,1], [1,2], [2,1], [2,2],
     [0,2], [2,1]])
+SINGLES_TEST = np.array([[2,1], [2,0], [1,2], [2,2], [2,1], [2,0], [0,2], [2,1],
+    [2,2], [2,0], [2,0]])
 
 
 """ Test next_signs_for_pair function """
@@ -123,17 +125,22 @@ def test_next_pairs_with_two_repeated():
     previous_games = np.array([[1,1], [2,0], [1,1], [0,2], [1,1]])
     bfnp, bfnp_size = ai.bayes_from_next_pairs(previous_games)
     assert bfnp_size == 2
-    assert np.allclose(bfnp, [-0.5,0,0.5])
+    assert np.allclose(bfnp, [-1,0,1])
 
 def test_next_pairs_with_small_test():
     bfnp, bfnp_size = ai.bayes_from_next_pairs(SMALL_TEST)
     assert bfnp_size == 4
-    assert np.allclose(bfnp, [-0.25,0.25,0])
+    assert np.allclose(bfnp, [-1,1,0])
 
 def test_next_pairs_with_full_test():
     bfnp, bfnp_size = ai.bayes_from_next_pairs(FULL_TEST)
     assert bfnp_size == 5
-    assert np.allclose(bfnp, [0.6,0.2,-0.8])
+    assert np.allclose(bfnp, [3,1,-4])
+
+def test_next_pairs_with_full_test():
+    bfnp, bfnp_size = ai.bayes_from_next_pairs(SINGLES_TEST)
+    assert bfnp_size == 3
+    assert np.allclose(bfnp, [0,0,0])
 
 
 """ Test bayes_from_next_singles function """
@@ -165,17 +172,22 @@ def test_next_singles_with_two_repeated():
     previous_games = np.array([[1,1], [2,0], [1,1], [0,2], [1,1]])
     bfnp, bfnp_size = ai.bayes_from_next_singles(previous_games)
     assert bfnp_size == 2
-    assert np.allclose(bfnp, [-0.5,0,0.5])
+    assert np.allclose(bfnp, [-1,0,1])
 
 def test_next_singles_with_small_test():
     bfnp, bfnp_size = ai.bayes_from_next_singles(SMALL_TEST)
     assert bfnp_size == 4
-    assert np.allclose(bfnp, [-0.25,0.25,0])
+    assert np.allclose(bfnp, [-1,1,0])
 
 def test_next_singles_with_full_test():
     bfnp, bfnp_size = ai.bayes_from_next_singles(FULL_TEST)
     assert bfnp_size == 7
-    assert np.allclose(bfnp, [0.285714,0.142857,-0.42857])
+    assert np.allclose(bfnp, [2,1,-3])
+
+def test_next_singles_with_full_test():
+    bfnp, bfnp_size = ai.bayes_from_next_singles(SINGLES_TEST)
+    assert bfnp_size == 8
+    assert np.allclose(bfnp, [-5,5,0])
 
 
 """ Test select_next_move_against(user) function """
@@ -198,9 +210,14 @@ def test_next_move_returns_random_int_when_to_few_past_games():
 def test_next_move_with_small_test():
     next_move, method = ai.select_next_move_against(SMALL_TEST)
     assert next_move == 0
-    assert method == "Bayes next singles"
+    assert method == "Bayes next pairs"
 
 def test_next_move_with_full_test():
     next_move, method = ai.select_next_move_against(FULL_TEST)
     assert next_move == 2
     assert method == "Bayes next pairs"
+
+def test_next_move_with_singles_test():
+    next_move, method = ai.select_next_move_against(SINGLES_TEST)
+    assert next_move == 0
+    assert method == "Bayes next singles"
