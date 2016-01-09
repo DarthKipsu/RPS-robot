@@ -49,6 +49,9 @@ def test():
     
     result = confusion_matrix(test_labels, all_vs_all(training_data, training_labels, test_data))
 
+    print("Rocks:", len(X[y==0]))
+    print("Papers:", len(X[y==1]))
+    print("Scissors:", len(X[y==2]))
     print(result)
     print("Error rate", (1 - np.sum(np.diagonal(result)) / float(len(test_data))))
 
