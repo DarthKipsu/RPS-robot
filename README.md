@@ -98,5 +98,3 @@ These instructions are for Linux operating system:
 14. Start the main program on your own computer as described in the installation without robotic hand.
 
 The next time you run the program, you can simply select the program from your NXT, once it's running, run RPCConnector from VirtualBox computer and finally run the main program from your own computer.
-
-**The program is still under development. While the game can be played, the algorithm to choose which sign the AI will play is not completed.**
