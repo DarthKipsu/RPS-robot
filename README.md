@@ -39,6 +39,16 @@ The user verifies if the program interpreted the hand sign correctly or changes 
 
 After saving the image, the game will also save the game outcome to players history and show statistics of previous games with the given username and allow the player to play again or close the program. If program is closed and the robotic arm is in use, the program will also write shut down instructions to the communications file between the main program and RPCConnector to make sure all the programs are properly closed.
 
+### Hand sign database
+
+Image detection uses black & white hand sign images that are 80x65 pixels in size turned into byte arrays. The images need to have a white hand on black backround, for example:
+
+![Paper](/robot-images/signs1.jpg) ![Rock](/robot-images/signs2.jpg) ![Scissors](/robot-images/signs3.jpg)
+
+Formatting the images and turning them into byte arrays is done automatically. All images taken during the game are automatically saved to the database, so even if your hand would be poorly recognized the efficiency of the detection will improve in time. Them main thing to keep in mind is to have a darker background than your skin color, see that the hand is in the middle of the image and make sure to correct any mislabeling after the program displays the taken image so no wrong labels are saved to the database.
+
+To use the small database I have collected while testing the software, unzip hand_sign_starting_data.tar.gz in the RPCRunner folder. This packet contains 133 images to start with, which is not much but can still be used to correctly label up to 85% of times. There are images from the hands of few different people but the correctness of labeling also greatly depends on how closely your hand will look alike with the database hands. :)
+
 ### Languages
 
 The main running program and the Lego Mindstorms robot is implemented using Java. Lego robot has a [leJOS](http://www.lejos.org/) operating system running inside it and main program on computer runs commands to it using the LejOS interface. User interface uses [JafaFX](http://docs.oracle.com/javase/8/javase-clienttechnologies.htm).
@@ -65,13 +75,13 @@ $ chmod +x MachineLearning/mocks/mstatistics.py
 $ chmod +x MachineLearning/mocks/mrpc_ai.py
 ```
 
+To use the small starting database provided for the hand sign images, unzip hand_sign_starting_data.tar.gz in the RPCRunner folder. You can create more data by playing the game or by running Labeler.java which is designed for adding pictures to the database without playing.
+
 Then make sure you have a webcam connected and run the program with [Gradle](http://gradle.org/) wrapper from **RPCRunner** folder:
 
 ```markdown
 $ ./gradlew run
 ```
-
-The orginal data set for hand sign recognition images is not yet available, but I will do it once I have collected more images. :) In the mean while you can create your own dataset by simply playing the game. You should start by creating at least one of each hand sign by running Labeler.java from data packet.
 
 ### Installation with robotic hand
 
