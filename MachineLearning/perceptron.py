@@ -10,6 +10,8 @@ def perceptron(data, label):
     label +1 and - sign data items label -1
     :return: weight vector w defining pred_y = sign(w * x)
     """
+    if (len(data) == 0):
+        return []
     w = np.zeros(len(data[0]), np.int32)
     pocket = np.copy(w)
     pocket_count = 0
@@ -29,7 +31,4 @@ def perceptron(data, label):
                 correct_count += 1
         if converged:
             return w
-    if pocket_count == 0:
-        print('Something not right: 0 pockets')
-        return w
     return pocket
