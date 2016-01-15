@@ -6,33 +6,17 @@ import sys
 
 SIGN_WEIGHTS = np.array([[0,1,-1], [-1,0,1], [1,-1,0]])
 
-def next_signs_for_pair(pair, past_games):
-    """
-    Takes a previous game pair [user played, ai played], and a list of past 
-    games. Finds all similar pairs from past games and returns a list of signs
-    user played right after playing that pair.
-    """
-    if (past_games.size == 0):
-        return []
-    last_i = len(past_games) - 1
-    next_pair_indexes = np.array(np.where((past_games[:last_i,0] == pair[0])
-        & (past_games[:last_i,1] == pair[1]))[0])
-    if (next_pair_indexes.size == 0):
-        return []
-    next_pair_indexes += 1
-    return past_games[next_pair_indexes][:,0]
-
-def next_signs_for_single(sign, past_games):
+def next_signs(past_games, next_func, last_game):
     """
     Takes a previous game sign [user played], and a list of past games. Finds
     all similar user played signs from past games and returns a list of signs
     user played right after playing that sign.
     """
-    if (past_games.size == 0):
+    if (len(past_games) == 0):
         return []
     last_i = len(past_games) - 1
-    next_pair_indexes = np.array(np.where(past_games[:last_i,0] == sign[0])[0])
-    if (next_pair_indexes.size == 0):
+    next_pair_indexes = np.array(np.where(next_func(past_games, last_i, last_game))[0])
+    if (len(next_pair_indexes) == 0):
         return []
     next_pair_indexes += 1
     return past_games[next_pair_indexes][:,0]
@@ -48,21 +32,7 @@ def rps_frequencies(signs):
     frequencies = np.bincount(signs)
     return np.concatenate((frequencies, zeros))[:3]
 
-def bayes_from_next_pairs(past_games):
-    """
-    Takes a list of past games and based on similar pairs than the pair last
-    played, returns a duble containing first the weights for choosing each sign,
-    and the amount of datapoints used to calculate those weights.
-    """
-    if (len(past_games) <= 1):
-        return np.zeros(3), 0
-    last_game = past_games[len(past_games) - 1]
-    similar_game_next_moves = next_signs_for_pair(last_game, past_games)
-    next_move_freq = rps_frequencies(similar_game_next_moves)
-    freq_sum = np.sum(next_move_freq)
-    return np.dot(SIGN_WEIGHTS, next_move_freq), freq_sum
-
-def bayes_from_next_singles(past_games):
+def bayes_from(past_games, next_func):
     """
     Takes a list of past games and based on similar signs than the sign last
     played, returns a double containing first the weights for choosing each sign,
@@ -71,10 +41,17 @@ def bayes_from_next_singles(past_games):
     if (len(past_games) <= 1):
         return np.zeros(3), 0
     last_game = past_games[len(past_games) - 1]
-    similar_game_next_moves = next_signs_for_single([last_game[0]], past_games)
+    similar_game_next_moves = next_signs(past_games, next_func, last_game)
     next_move_freq = rps_frequencies(similar_game_next_moves)
     freq_sum = np.sum(next_move_freq)
     return np.dot(SIGN_WEIGHTS, next_move_freq), freq_sum
+
+def next_pairs(past_games, last_i, last_game):
+    return ((past_games[:last_i,0] == last_game[0])
+        & (past_games[:last_i,1] == last_game[1]))
+
+def next_singles(past_games, last_i, last_game):
+    return (past_games[:last_i,0] == last_game[0])
 
 def select_next_move_against(past_games):
     """
@@ -84,8 +61,8 @@ def select_next_move_against(past_games):
     If no sufficient data is available, return a random digit between 0 to 2
     (TODO: select better boundaries for sufficient data)
     """
-    bfnp, bfnp_size = bayes_from_next_pairs(past_games)
-    bfns, bfns_size = bayes_from_next_singles(past_games)
+    bfnp, bfnp_size = bayes_from(past_games, next_pairs)
+    bfns, bfns_size = bayes_from(past_games, next_singles)
     if ((bfnp_size > 1) | (bfns_size > 1)):
         if (bfnp[np.argmin(bfnp)] <= bfns[np.argmin(bfns)]):
             return np.argmin(bfnp), "Bayes next pairs"
