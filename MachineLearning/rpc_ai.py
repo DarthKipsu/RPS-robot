@@ -6,20 +6,21 @@ import sys
 
 SIGN_WEIGHTS = np.array([[0,1,-1], [-1,0,1], [1,-1,0]])
 
-def next_signs(past_games, next_func, last_game):
+def next_signs(past_games, next_func):
     """
-    Takes a previous game sign [user played], and a list of past games. Finds
-    all similar user played signs from past games and returns a list of signs
-    user played right after playing that sign.
+    Takes a list of past games and a function by which next indexes are selected.
+    Finds all similar user played signs from past games and returns a list of
+    signs user played right after playing that sign.
     """
     if (len(past_games) == 0):
         return []
     last_i = len(past_games) - 1
-    next_pair_indexes = np.array(np.where(next_func(past_games, last_i, last_game))[0])
-    if (len(next_pair_indexes) == 0):
+    last_game = past_games[last_i]
+    next_moves = np.array(np.where(next_func(past_games, last_i, last_game))[0])
+    if (len(next_moves) == 0):
         return []
-    next_pair_indexes += 1
-    return past_games[next_pair_indexes][:,0]
+    next_moves += 1
+    return past_games[next_moves][:,0]
 
 def rps_frequencies(signs):
     """
@@ -34,14 +35,14 @@ def rps_frequencies(signs):
 
 def bayes_from(past_games, next_func):
     """
-    Takes a list of past games and based on similar signs than the sign last
-    played, returns a double containing first the weights for choosing each sign,
-    and the amount of datapoints used to calculate those weights.
+    Takes a list of past games and a function by which next indexes are selected.
+    Based on similar signs than the sign last played, returns a double
+    containing first the weights for choosing each sign, and the amount of
+    datapoints used to calculate those weights.
     """
     if (len(past_games) <= 1):
         return np.zeros(3), 0
-    last_game = past_games[len(past_games) - 1]
-    similar_game_next_moves = next_signs(past_games, next_func, last_game)
+    similar_game_next_moves = next_signs(past_games, next_func)
     next_move_freq = rps_frequencies(similar_game_next_moves)
     freq_sum = np.sum(next_move_freq)
     return np.dot(SIGN_WEIGHTS, next_move_freq), freq_sum
