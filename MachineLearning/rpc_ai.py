@@ -47,11 +47,17 @@ def bayes_from(past_games, next_func):
     freq_sum = np.sum(next_move_freq)
     return np.dot(SIGN_WEIGHTS, next_move_freq), freq_sum
 
-def next_pairs(past_games, last_i, last_game):
+def same_pairs(past_games, last_i, last_game):
+    """
+    Returns true when both player and AI played the same moves as in last_game.
+    """
     return ((past_games[:last_i,0] == last_game[0])
         & (past_games[:last_i,1] == last_game[1]))
 
-def next_singles(past_games, last_i, last_game):
+def same_player_signs(past_games, last_i, last_game):
+    """
+    Return true when player played the same move as in last game.
+    """
     return (past_games[:last_i,0] == last_game[0])
 
 def select_next_move_against(past_games):
@@ -62,8 +68,8 @@ def select_next_move_against(past_games):
     If no sufficient data is available, return a random digit between 0 to 2
     (TODO: select better boundaries for sufficient data)
     """
-    bfnp, bfnp_size = bayes_from(past_games, next_pairs)
-    bfns, bfns_size = bayes_from(past_games, next_singles)
+    bfnp, bfnp_size = bayes_from(past_games, same_pairs)
+    bfns, bfns_size = bayes_from(past_games, same_player_signs)
     if ((bfnp_size > 1) | (bfns_size > 1)):
         if (bfnp[np.argmin(bfnp)] <= bfns[np.argmin(bfns)]):
             return np.argmin(bfnp), "Bayes next pairs"
