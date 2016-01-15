@@ -62,8 +62,6 @@ public class NxtConnector {
 
 	public void closeConnection() throws IOException {
 		System.out.println("Close");
-		output.writeInt(0);
-		output.flush();
 		wait(500);
 
 		output.close();
