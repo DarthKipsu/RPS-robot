@@ -28,6 +28,9 @@ def read_past_games(user):
     with users games on the first column and ai on the second.
     :return: past games in 2D array
     """
-    with open('../RPCRunner/data/players/' + user) as file:
-        games = [[int(sign) for sign in line.split()] for line in file]
+    try:
+        with open('../RPCRunner/data/players/' + user) as file:
+            games = [[int(sign) for sign in line.split()] for line in file]
+    except FileNotFoundError:
+        games = []
     return np.array(games)
