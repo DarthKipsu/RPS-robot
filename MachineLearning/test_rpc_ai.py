@@ -9,6 +9,7 @@ FULL_TEST = np.array([[0,1], [2,1], [1,0], [2,0], [2,1], [1,0], [0,1], [2,1],
     [0,2], [2,1]])
 SINGLES_TEST = np.array([[2,1], [2,0], [1,2], [2,2], [2,1], [2,0], [0,2], [2,1],
     [2,2], [2,0], [2,0]])
+RANGE_TEST = np.array([[2,1],[1,2],[0,0],[2,0],[1,1],[0,2]])
 
 
 """ Test next_signs function with next_pairs """
@@ -243,6 +244,51 @@ def test_next_singles_with_full_test():
     assert np.allclose(bfnp, [-5,5,0])
 
 
+""" Test method choosing functions """
+
+def test_bayes_from_next_pairs_when_everything_ok():
+    assert ai.choose_bayes_next_pairs(2, -3, 3, -3, 3, -3) == True
+
+def test_bayes_from_next_pairs_when_no_pairs():
+    assert ai.choose_bayes_next_pairs(0, -3, 3, -3, 3, -3) == False
+
+def test_bayes_from_next_pairs_when_one_pair():
+    assert ai.choose_bayes_next_pairs(1, -3, 3, -3, 3, -3) == False
+
+def test_bayes_from_next_pairs_when_singles_is_more_meaningfull():
+    assert ai.choose_bayes_next_pairs(2, -3, 3, -4, 3, -3) == False
+
+def test_bayes_from_next_pairs_when_suffixes_are_more_meaningfull():
+    assert ai.choose_bayes_next_pairs(2, -3, 3, -3, 3, -4) == False
+
+def test_bayes_from_next_pairs_when_suffixes_more_meaningfull_not_enough_singles():
+    assert ai.choose_bayes_next_pairs(2, -3, 2, -3, 3, -4) == False
+
+def test_bayes_from_next_pairs_when_not_enough_singles():
+    assert ai.choose_bayes_next_pairs(2, -3, 2, -4, 3, -3) == True
+
+def test_bayes_from_next_pairs_when_not_enough_suffixes():
+    assert ai.choose_bayes_next_pairs(2, -3, 3, -3, 2, -4) == True
+
+def test_similar_ranges_when_everything_ok():
+    assert ai.choose_similar_ranges(3, -3, 3, -3) == True
+
+def test_similar_ranges_when_too_short_range():
+    assert ai.choose_similar_ranges(3, -3, 2, -3) == False
+
+def test_similar_ranges_when_singles_is_more_meaningfull():
+    assert ai.choose_similar_ranges(3, -4, 3, -3) == False
+
+def test_similar_ranges_when_not_enough_singles():
+    assert ai.choose_similar_ranges(2, -3, 3, -3) == True
+
+def test_bayes_from_singles_when_everything_ok():
+    assert ai.choose_bayes_next_singles(3) == True
+
+def test_bayes_from_singles_when_too_few_singles():
+    assert ai.choose_bayes_next_singles(2) == False
+
+
 """ Test select_next_move_against(user) function """
 
 def test_next_move_returns_integer_between_0_2_when_no_past_games():
@@ -274,3 +320,8 @@ def test_next_move_with_singles_test():
     next_move, method = ai.select_next_move_against(SINGLES_TEST)
     assert next_move == 0
     assert method == "Bayes next singles"
+
+def test_next_move_with_singles_test():
+    next_move, method = ai.select_next_move_against(RANGE_TEST)
+    assert next_move == 1
+    assert method == "longest similar range"

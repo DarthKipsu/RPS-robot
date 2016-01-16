@@ -114,21 +114,36 @@ def same_player_signs(past_games, last_i, last_game):
     """
     return (past_games[:last_i,0] == last_game[0])
 
+def choose_bayes_next_pairs(bfnp_size, bfnp, bfns_size, bfns, suf_size, suf):
+    return ((bfnp_size > 1) & (((bfnp <= bfns) | (bfns_size < 3))
+        & ((suf_size < 3) | (bfnp <= suf))))
+
+def choose_similar_ranges(bfns_size, bfns, suf_size, suf):
+    return ((suf_size > 2) & ((suf <= bfns) | (bfns_size < 3)))
+
+def choose_bayes_next_singles(bfns_size):
+    return bfns_size > 2
+
 def select_next_move_against(past_games):
     """
     Uses machine learning to select what to play next. Calls for different ways
     to determine the weights for selecting different signs.
 
     If no sufficient data is available, return a random digit between 0 to 2
-    (TODO: select better boundaries for sufficient data)
     """
     bfnp, bfnp_size = bayes_from(past_games, same_pairs)
     bfns, bfns_size = bayes_from(past_games, same_player_signs)
-    if ((bfnp_size > 1) | (bfns_size > 1)):
-        if (bfnp[np.argmin(bfnp)] <= bfns[np.argmin(bfns)]):
-            return np.argmin(bfnp), "Bayes next pairs"
-        else:
-            return np.argmin(bfns), "Bayes next singles"
+    suf, suf_size = suffixes_from(past_games)
+    min_bfnp = np.argmin(bfnp)
+    min_bfns = np.argmin(bfns)
+    min_suf = np.argmin(suf)
+    if choose_bayes_next_pairs(bfnp_size, bfnp[min_bfnp], bfns_size,
+            bfns[min_bfns], suf_size, suf[min_suf]):
+        return min_bfnp, "Bayes next pairs"
+    elif choose_similar_ranges(bfns_size, bfns[min_bfns], suf_size, suf[min_suf]):
+        return min_suf, "longest similar range"
+    elif choose_bayes_next_singles(bfns_size):
+        return min_bfns, "Bayes next singles"
     else:
         return randint(0,2), "random"
 
