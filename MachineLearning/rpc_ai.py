@@ -33,6 +33,60 @@ def rps_frequencies(signs):
     frequencies = np.bincount(signs)
     return np.concatenate((frequencies, zeros))[:3]
 
+def update_suffix_moves(j, suffix, longest_range, next_move):
+    """
+    Checks if longest_range and/or next_move need to be updated after a suffix
+    either ends correctly or no longer matches past games.
+    """
+    if j > longest_range:
+        return j, [suffix[0]]
+    elif j == longest_range:
+        next_move = np.append(next_move, [suffix[0]])
+    return longest_range, next_move
+
+def suffix_no_longer_match_past(suffix, j, games):
+    """
+    Returns true if suffix next index does not meet expected from past games.
+    """
+    return suffix[j+1] != games[j]
+
+def suffix_ends_correctly(j, suffix):
+    """
+    Returns true if we just checked the last suffix index. Because we did not
+    go to suffix_no_longer_match_past branch, the suffix must match.
+    """
+    return j == len(suffix) - 2
+
+def suffixes_from(past_games):
+    """
+    Finds the longest range matching what has been played previously from past
+    games and returns the bayes optimal based on what was played after the 
+    longest range last time. If several same length ranges are found, they are
+    all used when calculating the optimal. Returns also the length of the
+    longest range to be used when estimating which algorithm to use when
+    selecting the best move for next game.
+    """
+    if len(past_games) == 0:
+        return np.array([0,0,0]), 0
+    games = past_games[:,0]
+    longest_range = 0
+    next_move = []
+    for i in range(len(games)-1):
+        suffix = games[i:]
+        if longest_range > len(suffix):
+            break
+        for j in range(len(suffix)-1):
+            if suffix_no_longer_match_past(suffix, j, games):
+                if j != 0:
+                    longest_range, next_move = update_suffix_moves(
+                            j, suffix, longest_range, next_move)
+                break
+            elif suffix_ends_correctly(j, suffix):
+                longest_range, next_move = update_suffix_moves(
+                        j+1, suffix, longest_range, next_move)
+    frequencies = rps_frequencies(np.array(next_move))
+    return np.dot(SIGN_WEIGHTS, frequencies), longest_range
+
 def bayes_from(past_games, next_func):
     """
     Takes a list of past games and a function by which next indexes are selected.

@@ -96,6 +96,59 @@ def test_frequencies_when_array_has_same_digits():
     assert np.allclose(ai.rps_frequencies(signs), [1,3,0])
 
 
+""" Test suffixes_from function """
+
+def test_suffixes_with_no_previous_games():
+    suf, suf_size = ai.suffixes_from(EMPTY_ARRAY)
+    assert suf_size == 0
+    assert np.allclose(suf, [0,0,0])
+
+def test_suffixes_with_no_matching_pipes():
+    previous_games = np.array([[1,1], [2,0]])
+    suf, suf_size = ai.suffixes_from(previous_games)
+    assert suf_size == 0
+    assert np.allclose(suf, [0,0,0])
+
+def test_suffixes_with_one_match():
+    previous_games = np.array([[1,1], [2,0], [2,1], [1,0], [0,2]])
+    suf, suf_size = ai.suffixes_from(previous_games)
+    assert suf_size == 1
+    assert np.allclose(suf, [-1,1,0])
+
+def test_suffixes_with_one_match_at_the_end():
+    previous_games = np.array([[1,1], [2,0], [2,1], [0,2], [1,0]])
+    suf, suf_size = ai.suffixes_from(previous_games)
+    assert suf_size == 1
+    assert np.allclose(suf, [0,-1,1])
+
+def test_suffixes_with_two_seperate_matches():
+    previous_games = np.array([[1,1], [2,0], [1,1], [1,0], [0,2]])
+    suf, suf_size = ai.suffixes_from(previous_games)
+    assert suf_size == 1
+    assert np.allclose(suf, [0,1,-1])
+
+def test_suffixes_with_two_seperate_matches_and_one_in_the_end():
+    previous_games = np.array([[1,1], [2,0], [1,1], [0,2], [1,0]])
+    suf, suf_size = ai.suffixes_from(previous_games)
+    assert suf_size == 1
+    assert np.allclose(suf, [-1,0,1])
+
+def test_suffixes_with_small_test():
+    suf, suf_size = ai.suffixes_from(SMALL_TEST)
+    assert suf_size == 1
+    assert np.allclose(suf, [-1,1,0])
+
+def test_suffixes_with_full_test():
+    suf, suf_size = ai.suffixes_from(FULL_TEST)
+    assert suf_size == 3
+    assert np.allclose(suf, [2,0,-2])
+
+def test_suffixes_with_singles_test():
+    suf, suf_size = ai.suffixes_from(SINGLES_TEST)
+    assert suf_size == 2
+    assert np.allclose(suf, [-2,2,0])
+
+
 """ Test bayes_from_next_pairs function """
 
 def test_next_pairs_with_no_previous_games():
