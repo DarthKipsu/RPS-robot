@@ -378,7 +378,7 @@ def test_last_choise_when_everything_ok():
     assert ai.choose_last_choise(2) == True
 
 def test_last_choise_when_too_few_singles():
-    assert ai.choose_last_choise(1) == False
+    assert ai.choose_last_choise(0) == False
 
 
 """ Test select_next_move_against(user) function """
@@ -411,14 +411,14 @@ def test_next_move_with_full_test():
 def test_next_move_with_singles_test():
     next_move, method = ai.select_next_move_against(SINGLES_TEST)
     assert next_move == 0
-    assert method == "longest similar range"
+    assert method == "Bayes next singles"
 
 def test_next_move_with_range_test():
     next_move, method = ai.select_next_move_against(RANGE_TEST)
     assert next_move == 1
-    assert method == "longest similar range"
+    assert method == "2 previous singles"
 
 def test_next_move_with_n2_previous():
     next_move, method = ai.select_next_move_against(N_TEST)
-    assert next_move == 0
-    assert method == "2 previous singles"
+    assert next_move == 2
+    assert method == "Bayes next singles"

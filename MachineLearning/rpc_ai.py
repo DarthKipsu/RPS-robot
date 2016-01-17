@@ -139,7 +139,6 @@ def same_pairs(past_games, last_i, last_game):
 def same_player_signs(past_games, last_i, last_game):
     """
     Return true when player played the same move as in last game.
-    Deprecated, not currently in use because of poor performance!
     """
     return (past_games[:last_i,0] == last_game[0])
 
@@ -151,7 +150,7 @@ def choose_second_choise(size_1, val_1, size_2, val_2):
     return ((size_1 > 1) & ((val_1 <= val_2) | (size_2 < 2)))
 
 def choose_last_choise(size_1):
-    return size_1 > 1
+    return size_1 > 0
 
 def select_next_move_against(past_games):
     """
@@ -160,19 +159,19 @@ def select_next_move_against(past_games):
 
     If no sufficient data is available, return a random digit between 0 to 2
     """
-    bfnp, bfnp_size = bayes_from(past_games, same_pairs)
-    prev_2, size_2 = n_previous(past_games, 2)
-    suf, suf_size = suffixes_from(past_games)
-    min_bfnp = np.argmin(bfnp)
-    min_2 = np.argmin(prev_2)
-    min_suf = np.argmin(suf)
-    if choose_top_choise(bfnp_size, bfnp[min_bfnp], size_2,
-            prev_2[min_2], suf_size, suf[min_suf]):
-        return min_bfnp, "Bayes next pairs"
-    elif choose_second_choise(suf_size, suf[min_suf], size_2, prev_2[min_2]):
-        return min_suf, "longest similar range"
-    elif choose_last_choise(size_2):
-        return min_2, "2 previous singles"
+    top, top_size = bayes_from(past_games, same_pairs)
+    second, size_2 = bayes_from(past_games, same_player_signs)
+    third, size_3 = n_previous(past_games, 2)
+    min_top = np.argmin(top)
+    min_2 = np.argmin(second)
+    min_3 = np.argmin(third)
+    if choose_top_choise(top_size, top[min_top], size_2,
+            second[min_2], size_3, third[min_3]):
+        return min_top, "Bayes next pairs"
+    elif choose_second_choise(size_2, second[min_2], size_3, third[min_3]):
+        return min_2, "Bayes next singles"
+    elif choose_last_choise(size_3):
+        return min_3, "2 previous singles"
     else:
         return randint(0,2), "random"
 
