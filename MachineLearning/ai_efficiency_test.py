@@ -11,7 +11,7 @@ def ai_won(player_move, ai_move):
 
 def efficiency_test(player_move):
     moves = []
-    # all wins, pairs wins, 3 singles wins, 2 singles wins, then losses, draws
+    # random wins, first wins, second wins, third wins, then losses, draws
     statistics = np.zeros(12)
     for i in range(len(player_move)):
         ai_move, method = ai.select_next_move_against(np.array(moves))
@@ -23,7 +23,7 @@ def efficiency_test(player_move):
                 statistics[1] += 1
             else:
                 statistics[5] += 1
-        elif method == "3 previous singles":
+        elif method == "Bayes next singles":
             if draw(player_move[i], ai_move):
                 statistics[10] += 1
             elif ai_won(player_move[i], ai_move):
@@ -57,7 +57,7 @@ def efficiency_test(player_move):
     print("L", statistics[5])
     print("D", statistics[9])
     print()
-    print("3 previous singles")
+    print("Bayes next singles")
     print("W", statistics[2])
     print("L", statistics[6])
     print("D", statistics[10])
