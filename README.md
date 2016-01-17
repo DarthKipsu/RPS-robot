@@ -51,7 +51,7 @@ The AI has several tactics it can use to predict the players next move. All of t
 
 The AI currently uses 3 strategies with priorities based on the order they are selected. You can test different combinations with ai_efficiency_test.py which you can give a sequence of user plays and it will simulate playing that many games, displaying statistics at the end.
 
-Good set to start with is using Bayes from next game with pairs as priority 1, singles as priority 2 and 2 next games as priority 3. This produces AI win ratio from 65% up to over 70%. The suffixes method is not very good and n next games will produce better results with a smaller n, however they work differently with different tactiques so it might be worthwhile to test different combinations out.
+Good set to start with is using Bayes from next game with pairs as priority 1, singles as priority 2 and n next games with 2 next games as priority 3. This produces AI win ratio from 65% up to over 70%. The suffixes method is not very good and n next games will produce better results with a smaller n, however they work differently with different tactiques so it might be worthwhile to test different combinations out.
 
 ### Hand sign database
 
