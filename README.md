@@ -39,6 +39,20 @@ The user verifies if the program interpreted the hand sign correctly or changes 
 
 After saving the image, the game will also save the game outcome to players history and show statistics of previous games with the given username and allow the player to play again or close the program. If program is closed and the robotic arm is in use, the program will also write shut down instructions to the communications file between the main program and RPCConnector to make sure all the programs are properly closed.
 
+### AI
+
+The AI has several tactics it can use to predict the players next move. All of them are based on Bayes optimality, but have different implementations for calculating probabilities a player might play a certain move.
+
+**Bayes from next game** looks at the most recent previous game and looks up either all other previous games where both player and AI played the same way or games where only the players move was the same, based on what kind of selector it is provided with. It will create a weight vector based on what was played next in these previous games.
+
+**N next games** looks at the n previous games and finds any other same sequences from previous games. It will create a weight vector based on what was played next after the earlier sequences.
+
+**Suffixes from past games** creates a suffix array containing all suffixes from the previous game to the first one. It will find the longest matching sequence to what was played most recently and based on what was played after that sequence, creates the weight vector.
+
+The AI currently uses 3 strategies with priorities based on the order they are selected. You can test different combinations with ai_efficiency_test.py which you can give a sequence of user plays and it will simulate playing that many games, displaying statistics at the end.
+
+Good set to start with is using Bayes from next game with pairs as priority 1, singles as priority 2 and 2 next games as priority 3. This produces AI win ratio from 65% up to over 70%. The suffixes method is not very good and n next games will produce better results with a smaller n, however they work differently with different tactiques so it might be worthwhile to test different combinations out.
+
 ### Hand sign database
 
 Image detection uses black & white hand sign images that are 80x65 pixels in size turned into byte arrays. The images need to have a white hand on black backround, for example:
