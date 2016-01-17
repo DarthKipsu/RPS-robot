@@ -87,6 +87,34 @@ def suffixes_from(past_games):
     frequencies = rps_frequencies(np.array(next_move))
     return np.dot(SIGN_WEIGHTS, frequencies), longest_range
 
+def matching_recent(suffixes, n):
+    """
+    Returns the next moves after a game that matches the n most recent games
+    played. Takes an array of suffixes generated from past games, with length
+    at least n + 1, where the first item in the array is the sign played
+    immediately after that suffix.
+    """
+    if len(suffixes) < n:
+        return []
+    recent = np.array(suffixes[:n,0])
+    for i in range(n):
+        suffixes = suffixes[suffixes[:,i+1] == recent[i]]
+    return suffixes[:,0]
+
+def n_previous(past_games, n):
+    """
+    Takes past games and the number of previous games we want to match n. Finds
+    all matches of n length compared to n most recent games and returns the
+    Bayes optimal from what was played immediately after those matches.
+    """
+    if len(past_games) <= n:
+        return np.array([0,0,0]), 0
+    games = past_games[:,0]
+    suffixes = np.array([games[i:i+1+n] for i in range(len(games)-n)])
+    next_move = matching_recent(suffixes, n)
+    frequencies = rps_frequencies(np.array(next_move))
+    return np.dot(SIGN_WEIGHTS, frequencies), np.sum(frequencies)
+
 def bayes_from(past_games, next_func):
     """
     Takes a list of past games and a function by which next indexes are selected.

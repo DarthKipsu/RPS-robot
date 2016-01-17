@@ -150,6 +150,97 @@ def test_suffixes_with_singles_test():
     assert np.allclose(suf, [-2,2,0])
 
 
+""" Test matching_recent function """
+
+def test_matching_recent_when_no_matches_n1():
+    suffixes = np.array([[1,2],[1,0],[2,2],[0,2],[1,0]])
+    assert np.allclose(ai.matching_recent(suffixes, 1), EMPTY_ARRAY)
+
+def test_matching_recent_when_one_match_n1():
+    suffixes = np.array([[1,2],[1,0],[2,1],[0,2],[1,0]])
+    assert np.allclose(ai.matching_recent(suffixes, 1), [2])
+
+def test_matching_recent_when_no_matches_n2():
+    suffixes = np.array([[1,2,1],[1,0,2],[2,2,0],[0,2,1],[1,0,2]])
+    assert np.allclose(ai.matching_recent(suffixes, 2), EMPTY_ARRAY)
+
+def test_matching_recent_when_one_matche_n2():
+    suffixes = np.array([[1,2,1],[1,0,2],[2,2,0],[0,1,1],[1,0,2]])
+    assert np.allclose(ai.matching_recent(suffixes, 2), [0])
+
+def test_matching_recent_when_one_matche_n3():
+    suffixes = np.array([[1,2,1,2],[1,0,2,1],[2,2,0,1],[0,1,1,0],[1,1,1,2]])
+    assert np.allclose(ai.matching_recent(suffixes, 3), [1])
+
+def test_matching_recent_when_more_matches_n2():
+    suffixes = np.array([[1,2,1],[1,0,2],[2,2,0],[0,1,1],[1,1,1]])
+    assert np.allclose(ai.matching_recent(suffixes, 2), [0,1])
+
+def test_matching_recent_when_several_matches_n2():
+    suffixes = np.array([[1,2,1],[1,0,2],[2,2,0],[0,1,1],[1,1,1],[0,0,1],
+        [1,1,1],[2,1,1],[2,2,0],[0,1,1]])
+    assert np.allclose(ai.matching_recent(suffixes, 2), [0,1,1,2,0])
+
+def test_matching_recent_when_suffixes_length_is_smaller_than_n2():
+    suffixes = np.array([[1,2,1]])
+    assert np.allclose(ai.matching_recent(suffixes, 2), EMPTY_ARRAY)
+
+def test_matching_recent_when_suffixes_length_is_smaller_than_n3():
+    suffixes = np.array([[1,2,1,2],[1,0,2,1]])
+    assert np.allclose(ai.matching_recent(suffixes, 3), EMPTY_ARRAY)
+
+
+""" Test n_previous function """
+
+def test_n_previous_when_no_past_games():
+    n_prev, n_size = ai.n_previous(EMPTY_ARRAY, 2)
+    assert n_size == 0
+    assert np.allclose(n_prev, [0,0,0])
+
+def test_n_previous_when_not_enough_past_games_for_n2():
+    past_games = np.array([[1,2],[2,2],[1,0]])
+    n_prev, n_size = ai.n_previous(past_games, 2)
+    assert n_size == 0
+    assert np.allclose(n_prev, [0,0,0])
+
+def test_n_previous_when_not_enough_past_games_for_n3():
+    past_games = np.array([[1,2],[2,2],[1,0],[2,2]])
+    n_prev, n_size = ai.n_previous(past_games, 3)
+    assert n_size == 0
+    assert np.allclose(n_prev, [0,0,0])
+
+def test_n_previous_when_one_match_for_n2():
+    past_games = np.array([[1,2],[2,2],[1,0],[2,2]])
+    n_prev, n_size = ai.n_previous(past_games, 2)
+    assert n_size == 1
+    assert np.allclose(n_prev, [-1,1,0])
+
+def test_n_previous_with_small_test_n2():
+    n_prev, n_size = ai.n_previous(SMALL_TEST, 2)
+    assert n_size == 0
+    assert np.allclose(n_prev, [0,0,0])
+
+def test_n_previous_with_full_test_n2():
+    n_prev, n_size = ai.n_previous(FULL_TEST, 2)
+    assert n_size == 3
+    assert np.allclose(n_prev, [1,1,-2])
+
+def test_n_previous_with_full_test_n3():
+    n_prev, n_size = ai.n_previous(FULL_TEST, 3)
+    assert n_size == 2
+    assert np.allclose(n_prev, [2,0,-2])
+
+def test_n_previous_with_full_test_n4():
+    n_prev, n_size = ai.n_previous(FULL_TEST, 4)
+    assert n_size == 0
+    assert np.allclose(n_prev, [0,0,0])
+
+def test_n_previous_with_singles_test_n2():
+    n_prev, n_size = ai.n_previous(SINGLES_TEST, 2)
+    assert n_size == 5
+    assert np.allclose(n_prev, [-2,2,0])
+
+
 """ Test bayes_from_next_pairs function """
 
 def test_next_pairs_with_no_previous_games():
