@@ -139,18 +139,19 @@ def same_pairs(past_games, last_i, last_game):
 def same_player_signs(past_games, last_i, last_game):
     """
     Return true when player played the same move as in last game.
+    Deprecated, not currently in use because of poor performance!
     """
     return (past_games[:last_i,0] == last_game[0])
 
-def choose_bayes_next_pairs(bfnp_size, bfnp, bfns_size, bfns, suf_size, suf):
-    return ((bfnp_size > 1) & (((bfnp <= bfns) | (bfns_size < 3))
-        & ((suf_size < 3) | (bfnp <= suf))))
+def choose_top_choise(size_1, val_1, size_2, val_2, size_3, val_3):
+    return ((size_1 > 1) & (((val_1 <= val_2) | (size_2 < 2))
+        & ((size_3 < 2) | (val_1 <= val_3))))
 
-def choose_similar_ranges(bfns_size, bfns, suf_size, suf):
-    return ((suf_size > 2) & ((suf <= bfns) | (bfns_size < 3)))
+def choose_second_choise(size_1, val_1, size_2, val_2):
+    return ((size_1 > 1) & ((val_1 <= val_2) | (size_2 < 2)))
 
-def choose_bayes_next_singles(bfns_size):
-    return bfns_size > 2
+def choose_last_choise(size_1):
+    return size_1 > 1
 
 def select_next_move_against(past_games):
     """
@@ -160,18 +161,18 @@ def select_next_move_against(past_games):
     If no sufficient data is available, return a random digit between 0 to 2
     """
     bfnp, bfnp_size = bayes_from(past_games, same_pairs)
-    bfns, bfns_size = bayes_from(past_games, same_player_signs)
+    prev_2, size_2 = n_previous(past_games, 2)
     suf, suf_size = suffixes_from(past_games)
     min_bfnp = np.argmin(bfnp)
-    min_bfns = np.argmin(bfns)
+    min_2 = np.argmin(prev_2)
     min_suf = np.argmin(suf)
-    if choose_bayes_next_pairs(bfnp_size, bfnp[min_bfnp], bfns_size,
-            bfns[min_bfns], suf_size, suf[min_suf]):
+    if choose_top_choise(bfnp_size, bfnp[min_bfnp], size_2,
+            prev_2[min_2], suf_size, suf[min_suf]):
         return min_bfnp, "Bayes next pairs"
-    elif choose_similar_ranges(bfns_size, bfns[min_bfns], suf_size, suf[min_suf]):
+    elif choose_second_choise(suf_size, suf[min_suf], size_2, prev_2[min_2]):
         return min_suf, "longest similar range"
-    elif choose_bayes_next_singles(bfns_size):
-        return min_bfns, "Bayes next singles"
+    elif choose_last_choise(size_2):
+        return min_2, "2 previous singles"
     else:
         return randint(0,2), "random"
 
